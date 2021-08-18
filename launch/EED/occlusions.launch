@@ -1,0 +1,8 @@
+<launch>
+  <node name="emsgc_main" pkg="emsgc" type="emsgc_main" output="screen" required="true"
+        args="/home/zhouyi/catkin_ws/src/EMSGC/calib/EED
+              /home/zhouyi/catkin_ws/src/EMSGC/cfg/EED/occlusions.yaml
+              /home/zhouyi/workspace/dataset/EMSGC_release/EED/occlusions/events_filtered.txt
+              /home/zhouyi/catkin_ws/src/EMSGC/result/EED/occlusions">
+  </node>
+</launch>

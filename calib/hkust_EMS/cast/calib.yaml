@@ -1,0 +1,12 @@
+image_width: 346
+image_height: 260
+camera_name: HKUST_DAVIS346
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [263.28364, 0, 176.161, 0, 263.69952, 125.098, 0.0, 0.0, 1.0]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.384006, 0.154708, 0.000817, 0.000338, 0.000000]

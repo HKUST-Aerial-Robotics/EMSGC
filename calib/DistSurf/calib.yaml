@@ -1,0 +1,12 @@
+image_width: 346
+image_height: 260
+camera_name: DistSurf_DAVIS346
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [289.774042631025, 0, 185.976950157181, 0, 288.809833981223, 132.584991698716, 0.0, 0.0, 1.0]
+distortion_model: radtan
+distortion_coefficients:
+  rows: 1
+  cols: 4
+  data: [-0.361699983842314,  0.158697458565572, 0.0, 0.0]

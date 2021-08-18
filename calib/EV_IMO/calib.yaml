@@ -1,0 +1,12 @@
+image_width: 346
+image_height: 260
+camera_name: EV_IMO_DAVIS346
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [257.682551525072, 0, 188.32594244206666, 0, 257.62490404843453, 131.5860901832534, 0.0, 0.0, 1.0]
+distortion_model: radtan
+distortion_coefficients:
+  rows: 1
+  cols: 4
+  data: [-0.3633210846969752, 0.12493858760488649, -0.00010824687666623974, -5.495966559183276e-06]

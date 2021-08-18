@@ -1,0 +1,35 @@
+width: 346
+height: 260
+num_events_per_image: 15000
+contrast_measure: 0
+use_polarity: false
+gaussian_smoothing_sigma: 1.0
+verbosity: 0
+LAMBDA_data: 1
+LAMBDA_smooth: 30
+LAMBDA_label: 8000
+BracketRow: 6 #4
+BracketCol: 6 #4
+NUM_ITER_SEGMENTATION: 5
+NUM_ITER_LABELING: 2
+HybridModelCombination: 2
+#  Only2D, 0
+#  Only3D, 1
+#  Only4D, 2
+#  Both2Dand3D, 3
+#  Both2Dand4D, 4
+#  Both3Dand4D, 5
+#  All2D3D4D 6
+
+DisplayResult: False
+SaveResult: True
+advanceNum: 0
+
+Affine_trans2d_max: 5000
+Affine_scale_max: 0.5
+Affine_theta_max: 1.5
+division_exponent: 7
+
+timestamp_begin: 1
+timestamp_end: 2
+timestamp_step: 0.1

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>emsgc</name>
+  <version>0.0.0</version>
+  <description>This package implements the method described in "Event-based Motion Segmentation Using Spatio-Temporal Graph Cut".</description>
+
+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
+  <maintainer email="eeyzhou@ust.hk">zhouyi</maintainer>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>GPLv3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>dvs_msgs</depend>
+  <depend>glog_catkin</depend>
+  <depend>minkindr</depend>
+  <depend>minkindr_conversions</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+  </export>
+</package>

@@ -1,0 +1,12 @@
+image_width: 346
+image_height: 260
+camera_name: HKUST_DAVIS346
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [2.6276480588211632e+02, 0, 1.7589534865536419e+02, 0, 2.6242274243034620e+02, 1.2374031642899564e+02, 0.0, 0.0, 1.0]
+distortion_model: radtan
+distortion_coefficients:
+  rows: 1
+  cols: 4
+  data: [-3.7725451491065165e-01, 1.4273569289480459e-01, 8.1237045841725736e-04, 2.5329725529011173e-04]

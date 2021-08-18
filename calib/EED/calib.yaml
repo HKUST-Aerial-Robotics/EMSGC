@@ -1,0 +1,12 @@
+image_width: 240
+image_height: 180
+camera_name: EV_IMO_DAVIS240
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [250, 0, 120, 0, 250, 90, 0.0, 0.0, 1.0]
+distortion_model: radtan
+distortion_coefficients:
+  rows: 1
+  cols: 4
+  data: [0,0,0,0]
