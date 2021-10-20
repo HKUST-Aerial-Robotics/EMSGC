@@ -1,10 +1,8 @@
-#ifndef EMSGC_CORE_EVENT_MOTION_SEGMENTATION_H
-#define EMSGC_CORE_EVENT_MOTION_SEGMENTATION_H
+#pragma once
 
 #include <emsgc/tools/utils.h>
 #include <emsgc/tools/TicToc.h>
 #include <emsgc/core/image_warped_events.h>
-#include "../../../trash/TimeSurface.h"
 #include <emsgc/container/EventQueueMat.h>
 #include <emsgc/container/EventMRF.h>
 #include <emsgc/container/PerspectiveCamera.h>
@@ -184,5 +182,3 @@ public:
 };
 }
 }
-
-#endif //EMSGC_CORE_EVENT_MOTION_SEGMENTATION_H

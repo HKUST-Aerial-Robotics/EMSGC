@@ -26,23 +26,23 @@ void EventMotionSegmentation::loadCalibInfo(const std::string &calibInfoPath, bo
   const std::string cam_calib_dir(calibInfoPath + "/calib.yaml");
   YAML::Node CamCalibInfo = YAML::LoadFile(cam_calib_dir);
 
-  // load calib (left cam)
+  // load camera calibration
   size_t width = CamCalibInfo["image_width"].as<int>();
   size_t height = CamCalibInfo["image_height"].as<int>();
   std::string cameraName = CamCalibInfo["camera_name"].as<std::string>();
   std::string distortion_model = CamCalibInfo["distortion_model"].as<std::string>();
-  std::vector<double> vD_left, vK_left;
-  vD_left = CamCalibInfo["distortion_coefficients"]["data"].as< std::vector<double> >();
-  vK_left = CamCalibInfo["camera_matrix"]["data"].as< std::vector<double> >();
-  pCam_->setIntrinsicParameters(width, height,cameraName,distortion_model,vD_left, vK_left );
+  std::vector<double> vD, vK;
+  vD = CamCalibInfo["distortion_coefficients"]["data"].as< std::vector<double> >();
+  vK = CamCalibInfo["camera_matrix"]["data"].as< std::vector<double> >();
+  pCam_->setIntrinsicParameters(width,height,cameraName,distortion_model,vD,vK);
   if(bPrintCalibInfo)
   {
     LOG(INFO) << "================== Calib Info ===============";
     LOG(INFO) << "Camera Calibration" << std::endl;
-    LOG(INFO) << "--image_width: " << pCam_->width_;
-    LOG(INFO) << "--image_height: " << pCam_->height_;
+    LOG(INFO) << "--image width : " << pCam_->width_;
+    LOG(INFO) << "--image height: " << pCam_->height_;
     LOG(INFO) << "--distortion model: " << pCam_->distortion_model_;
-    LOG(INFO) << "--distortion_coefficients: " << pCam_->D_.transpose();
+    LOG(INFO) << "--distortion coefficients: " << pCam_->D_.transpose();
     LOG(INFO) << "=============================================" << std::endl;
   }
 }
@@ -58,30 +58,32 @@ void EventMotionSegmentation::loadBaseOptions(const std::string & option_path)
 
   LOG(INFO) << "******************************************************************";
   LOG(INFO) << "*********************  Algorithm Parameters  *********************";
-  // image size
-  img_size_.width = baseOption["width"].as<size_t>();
-  img_size_.height = baseOption["height"].as<size_t>();
-  LOG(INFO) << "Found parameter: img_size.width = " << img_size_.width;
-  LOG(INFO) << "Found parameter: img_size.height = " << img_size_.height;
+  // Image size. Copied from calibration information
+  CHECK_GT(pCam_->width_, 0);
+  CHECK_GT(pCam_->height_, 0);
+  img_size_.width = pCam_->width_;
+  img_size_.height = pCam_->height_;
 
-  // number of event per segmentation
+  // Number of event per segmentation
   opts_.num_events_per_image_ = baseOption["num_events_per_image"].as<int>();
   LOG(INFO) << "Found parameter: num_events_per_image = " << opts_.num_events_per_image_;
 
   // Objective function parameters
-  opts_.contrast_measure_ = baseOption["contrast_measure"].as<int>();
+  opts_.contrast_measure_ = (!baseOption["contrast_measure"].IsDefined() ?
+    0 : baseOption["contrast_measure"].as<int>());
   LOG(INFO) << "Found parameter: contrast_measure = " << opts_.contrast_measure_;
 
   // Event warping parameters
-  opts_.opts_warp_.use_polarity_ = baseOption["use_polarity"].as<bool>();
+  opts_.opts_warp_.use_polarity_ = (!baseOption["use_polarity"].IsDefined() ?
+    false : baseOption["use_polarity"].as<bool>());
   LOG(INFO) << "Found parameter: use_polarity = " << ((opts_.opts_warp_.use_polarity_) ? "true" : "false" );
 
-  opts_.opts_warp_.blur_sigma_ = baseOption["gaussian_smoothing_sigma"].as<double>();
-  LOG(INFO) << "Found parameter: gaussian_smoothing_sigma = " << opts_.opts_warp_.blur_sigma_;
+  opts_.opts_warp_.blur_sigma_ = (!baseOption["gaussian_smoothing_sigma"].IsDefined() ?
+    1. : baseOption["gaussian_smoothing_sigma"].as<double>());
+  LOG(INFO) << "Found parameter: gaussian_smoothing_sigma = " << opts_.opts_warp_.blur_sigma_ << " pixels";
 
   // Verbosity / printing level
-  opts_.verbose_ = baseOption["verbosity"].as<unsigned int>();
-  LOG(INFO) << "Found parameter: verbosity = " << opts_.verbose_;
+  // Set the verbosity by running:  env GLOG_v=1 roslaunch emsgc car.launch
 
   // optimization parameters
   LAMBDA_data_ = baseOption["LAMBDA_data"].as<double>();//data term
@@ -380,7 +382,7 @@ void EventMotionSegmentation::applySegmentation_GMM(ros::Time& t_ref, ros::Time&
     if(mEvtClustersGMM_.size() == 1)
       break;
     LOG(INFO) << "**********************************************************";
-    LOG(INFO) << "The " << i + 1 << " iteration.";
+    LOG(INFO) << "The " << i + 1 << "-th iteration.";
 //    computeDataTermLookUpTables_GMM(t_ref, t_end);
     computeDataTermLookUpTables_GMM_undistortion(t_ref, t_end);
 
@@ -390,11 +392,11 @@ void EventMotionSegmentation::applySegmentation_GMM(ros::Time& t_ref, ros::Time&
       break;
     else
       labeling_result = cost;
-    LOG(INFO) << "-- (" << i + 1 << " iteration) Discrete Optimization on Labels takes: " << tt.toc() / 1000.0 << " s.";
+    LOG(INFO) << "-- (" << i + 1 << "-th iter) Discrete Optimization on Labels takes: " << tt.toc() / 1000.0 << " s.";
 
     tt.tic();
     optimizeModels_GMM(t_ref);
-    LOG(INFO) << "-- (" << i + 1 << " iteration) Continuous Optimization on Models takes: " << tt.toc() << " ms.";
+    LOG(INFO) << "-- (" << i + 1 << "-th iter) Continuous Optimization on Models takes: " << tt.toc() << " ms.";
     LOG(INFO) << "**********************************************************\n\n";
   }
 }
@@ -431,7 +433,7 @@ void EventMotionSegmentation::createEventGeneralGraph_newInit()
     auto it_edges = mEdges_.find(coordIndex);
     if(it_edges == mEdges_.end())
     {
-      LOG(INFO) << "A coordinate is missing in the delaunate triangulation.";
+      LOG(INFO) << "A coordinate is missing in Delaunay's triangulation.";
       LOG(INFO) << "x: " << x;
       LOG(INFO) << "y: " << y;
       exit(-1);
@@ -596,7 +598,7 @@ void EventMotionSegmentation::computeDataTermLookUpTables_GMM_undistortion(
   for(auto& [label, iwe] : mIWE_lookup_tables_TMP)
   {
     cv::Mat concatIWEs;
-    tools::concatHorizontal(iwe, iwe_with_max_value, &concatIWEs);
+    cv::hconcat(iwe, iwe_with_max_value, concatIWEs);
     cv::normalize(concatIWEs, concatIWEs, 0.0, 255.0, cv::NORM_MINMAX, CV_32FC1);
     concatIWEs = 255.0 - concatIWEs;
     cv::Mat iwe_crop = concatIWEs(cv::Rect(0,0,img_size_.width, img_size_.height));
@@ -885,52 +887,42 @@ void EventMotionSegmentation::saveSparseLabelMap(
   if(!ofile.is_open())
   {
     LOG(INFO) << "The given file is not opened.";
+    LOG(INFO) << savePath;
     exit(-1);
   }
 
   OptionsWarp opts_warp_display = opts_warp;
   opts_warp_display.blur_sigma_ = 0.;
 
-  size_t width = img_size_.width;
-  size_t height = img_size_.height;
-  //  cv::Size img_size(width, height);
-
-  cv::Mat iweROI;
   for(auto it = mEvtClustersGMM_.begin(); it != mEvtClustersGMM_.end(); it++)
   {
+    // draw each sub IWE
     auto & ec = it->second;
     std::vector<UndistortedEvent> vUndistortedEvents;
     vUndistortedEvents.reserve(ec.dqEvtSites_.size());
     for(auto& es : ec.dqEvtSites_)
       vUndistortedEvents.push_back(es.ev_undistort_);
+
+    cv::Mat iweROI;
     computeImageOfWarpedEvents_GMM_undistortion(
       ec.gmm_,
       vUndistortedEvents,
       t_ref.toSec(), img_size_, &iweROI, opts_warp_display);
 
-    //    cv::normalize(iweROI, iweROI, 0.0, 255.0, cv::NORM_MINMAX, CV_32FC1);
+    //cv::normalize(iweROI, iweROI, 0.0, 255.0, cv::NORM_MINMAX, CV_32FC1);
 
-    // record sparse labeled coordinate
-    for(size_t y = 0; y < height; y++)
-      for(size_t x = 0; x < width; x++)
+    // record sparse labeled coordinates
+    for(size_t y = 0; y < img_size_.height; y++)
+      for(size_t x = 0; x < img_size_.width; x++)
       {
         float intensity = iweROI.at<float>(y ,x);
-        if(intensity > 2.f) // Denoising: If at least two events (or equivalent contribution) is accumulated here, we regard it is a valid result
-          {
+        if(intensity > 2.f) // Denoising: If at least two events (or equivalent contribution) is accumulated here, we regard it as a valid result
+        {
           ofile << x << " " << y << " " << it->first << std::endl; // undistorted label map
-          }
+        }
       }
   }
   ofile.close();
-}
-
-void EventMotionSegmentation::saveIWE(
-  cv::Mat& iwe,
-  std::string& saveBaseDir,
-  std::string& fileName)
-{
-  std::string savePath(saveBaseDir + "/" + fileName);
-  cv::imwrite(savePath, iwe);
 }
 
 void EventMotionSegmentation::recycleData()

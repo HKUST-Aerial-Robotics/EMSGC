@@ -1,5 +1,4 @@
-#ifndef EMSGC_CORE_NUMERICAL_DERIV_H
-#define EMSGC_CORE_NUMERICAL_DERIV_H
+#pragma once
 
 #include <gsl/gsl_vector.h>
 
@@ -10,5 +9,3 @@ double vs_gsl_Gradient_ForwardDiff (
   gsl_vector * J,       /**< [out] Gradient vector (same length as x) */
   double dh             /**< [in] Increment in variable for numerical differentiation */
 );
-
-#endif //EMSGC_CORE_NUMERICAL_DERIV_H
