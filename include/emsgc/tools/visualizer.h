@@ -7,6 +7,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <fstream>
+#include <math.h>
+
 namespace emsgc
 {
   using namespace container;
@@ -404,7 +406,8 @@ namespace emsgc
 
       // Merge all IWEs using HSV color space.
       // Hue values (in degrees) for the colors of each cluster
-      float offs[] = {0, 120, 240,
+      // Color wheel https://i.stack.imgur.com/LC8Oh.png
+      const float hue_cluster[] = {0, 120, 240,
         60, 180, 300,
         30, 150, 270,
         90, 210, 330,
@@ -424,6 +427,7 @@ namespace emsgc
         11.25, 131.25, 251.25,
         18.75, 138.75, 258.75,
         26.25, 146.25, 266.25}; // 60 clusters max
+      const float hue_start = 240.f / 360.f; // color origin
 
       // Merge all IWEs into one
       double max_num_wevents_at_pixel;
@@ -439,8 +443,10 @@ namespace emsgc
           for(size_t iL = 0; iL < numLabels; iL++)
           {
             float prob_i = vIWE.at(iL).at<float>(y,x) / num_wevents_at_pixel;
-            hue += prob_i * (offs[iL] / 360.f);
+            hue += prob_i * (hue_cluster[iL] / 360.f);
           }
+          hue += hue_start; // rotate in the color wheel to start at hue_start
+          hue = hue - (long)hue; // wrap to [0,1]
           float saturation = num_wevents_at_pixel / (0.67*max_num_wevents_at_pixel);
           saturation = std::min(saturation, 1.f);
           output_hsv.at<cv::Vec3f>(y,x) = cv::Vec3f(180.f*hue, 255.f*saturation, 255.f);
