@@ -1,5 +1,6 @@
 #include <emsgc/core/event_motion_segmentation.h>
 #include <glog/logging.h>
+#include <sstream>
 
 namespace emsgc
 {
@@ -18,41 +19,35 @@ void EventMotionSegmentation::optimizeModels_GMM(ros::Time& t_ref)
     cv::Mat mask = cv::Mat::zeros(cv::Size(img_size_.width, img_size_.height), CV_8UC1);
     mask.setTo(255);
 
+    // Print motion parameters
+    LOG(INFO) << "Motion parameters:";
+    stringstream res;
+    for (int i=0; i <ec.gmm_.num_dof_; ++i){ res << ec.gmm_.parameters_[i] << " "; }
+    LOG(INFO) << "  Before optimizeModels_GMM(" << ec.label_ << "): [" << res.str() << "]";
+
+    // Optimize motion parameters
     if(ec.gmm_.num_dof_ == 1)
     {
-      LOG(INFO) << "Before optimizeModels_GMM(" << ec.label_ << "): " << ec.gmm_.parameters_[0];
-      gmmFittingUndistortion(
-        vUndistEvents, ec.gmm_.mmType_, mask, t_ref,
-        ec.gmm_, 0.01, 0.01);
-      LOG(INFO) << "After optimizeModels_GMM(" << ec.label_ << "): " << ec.gmm_.parameters_[0];
+      gmmFittingUndistortion( vUndistEvents, ec.gmm_.mmType_, mask, t_ref, ec.gmm_, 0.01, 0.01);
     }
-    if(ec.gmm_.num_dof_ == 2)
+    else if(ec.gmm_.num_dof_ == 2)
     {
-      LOG(INFO) << "Before optimizeModels_GMM(" << ec.label_ << "): " << ec.gmm_.parameters_[0] << " " << ec.gmm_.parameters_[1];
       gmmFittingUndistortion( vUndistEvents, ec.gmm_.mmType_, mask, t_ref, ec.gmm_, 1, 0.1);
-      LOG(INFO) << "After optimizeModels_GMM(" << ec.label_ << "): " << ec.gmm_.parameters_[0] << " " << ec.gmm_.parameters_[1];
     }
-
-    if(ec.gmm_.num_dof_ == 3)
+    else if(ec.gmm_.num_dof_ == 3)
     {
-      LOG(INFO) << "Before optimizeModels_GMM(" << ec.label_ << "): "
-                << ec.gmm_.parameters_[0] << " " << ec.gmm_.parameters_[1] << " " << ec.gmm_.parameters_[2];
       gmmFittingUndistortion( vUndistEvents, ec.gmm_.mmType_, mask, t_ref, ec.gmm_, 0.005, 0.001);
-      LOG(INFO) << "After optimizeModels_GMM(" << ec.label_ << "): "
-                << ec.gmm_.parameters_[0] << " " << ec.gmm_.parameters_[1] << " " << ec.gmm_.parameters_[2];
     }
-
-    if(ec.gmm_.num_dof_ == 4)
+    else if(ec.gmm_.num_dof_ == 4)
     {
-      LOG(INFO) << "Before optimizeModels_GMM(" << ec.label_ << "): "
-                << ec.gmm_.parameters_[0] << " " << ec.gmm_.parameters_[1] << " " << ec.gmm_.parameters_[2] << " " << ec.gmm_.parameters_[3];
       gmmFittingUndistortion( vUndistEvents, ec.gmm_.mmType_, mask, t_ref, ec.gmm_, 0.01, 0.001);
-      LOG(INFO) << "After optimizeModels_GMM(" << ec.label_ << "): "
-                << ec.gmm_.parameters_[0] << " " << ec.gmm_.parameters_[1] << " " << ec.gmm_.parameters_[2] << " " << ec.gmm_.parameters_[3];
     }
+    // Print motion parameters after optimization
+    res.str(std::string());
+    for (int i=0; i <ec.gmm_.num_dof_; ++i){ res << ec.gmm_.parameters_[i] << " "; }
+    LOG(INFO) << "  After  optimizeModels_GMM(" << ec.label_ << "): [" << res.str() << "]";
   }
 }
 
 }//namespace core
 }//namespace emsgc
-

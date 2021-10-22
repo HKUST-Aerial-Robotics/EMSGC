@@ -14,8 +14,7 @@ void warpEvent(
 {
   // compute the optical flow velocity using the motion model
   Eigen::Vector2d trans2D;
-  trans2D << model.m_x_,
-             model.m_y_;
+  trans2D << model.m_x_, model.m_y_;
   Eigen::Matrix2d rotation;
   rotation << cos(model.m_theta_), -sin(model.m_theta_),
               sin(model.m_theta_),  cos(model.m_theta_);
@@ -29,186 +28,78 @@ void warpEvent(
 
 void warpEvent_GMM(
   GeneralMotionModel &gmm,
-  const dvs_msgs::Event &event,
+  const cv::Point2d& ev_pt,
+  const double t_ev,
   const double t_ref,
   cv::Point2d *warped_pt)
 {
+  const double dt = t_ev - t_ref;
+
   // compute the optical flow velocity using the motion model
   if(gmm.mmType_ == TranslationModel)
   {
-    Eigen::Vector2d vel;
-    vel << gmm.parameters_[0];
-           gmm.parameters_[1];
-
     // warp (the minus sign is because vel is defined from t_ref to t_k.
-    Eigen::Vector2d displacement = (event.ts.toSec() - t_ref) * vel;
-    warped_pt->x = event.x - displacement(0);
-    warped_pt->y = event.y - displacement(1);
+    warped_pt->x = ev_pt.x - gmm.parameters_[0]*dt;
+    warped_pt->y = ev_pt.y - gmm.parameters_[1]*dt;
   }
 
   if(gmm.mmType_ == RotationModel)
   {
     Eigen::Vector3d w;
-    w << gmm.parameters_[0],
-         gmm.parameters_[1],
-         gmm.parameters_[2];
-    Eigen::Vector3d ecoord_3D_rotated, ecoord_3d;
-    ecoord_3d << event.x,
-                 event.y,
-                 1;
-    ecoord_3D_rotated = ecoord_3d + (event.ts.toSec() - t_ref) * (w.cross(ecoord_3d));
-    warped_pt->x = ecoord_3D_rotated(0) / ecoord_3D_rotated(2);
-    warped_pt->y = ecoord_3D_rotated(1) / ecoord_3D_rotated(2);
+    w << gmm.parameters_[0], gmm.parameters_[1], gmm.parameters_[2];
+    Eigen::Vector3d ev_3D;
+    ev_3D << ev_pt.x, ev_pt.y, 1;
+    Eigen::Vector3d ev_3D_rotated = ev_3D + dt * (w.cross(ev_3D));
+    warped_pt->x = ev_3D_rotated(0) / ev_3D_rotated(2);
+    warped_pt->y = ev_3D_rotated(1) / ev_3D_rotated(2);
   }
 
   if(gmm.mmType_ == AffineModel)
   {
-    Eigen::Vector2d vel;
-    Eigen::Vector2d trans2D;
-    trans2D << gmm.parameters_[0],
-               gmm.parameters_[1];
+    Eigen::Vector2d vel, trans2D;
+    trans2D << gmm.parameters_[0], gmm.parameters_[1];
     Eigen::Matrix2d rotation;
-    double theta = gmm.parameters_[3];
+    const double theta = gmm.parameters_[3];
     rotation << cos(theta), -sin(theta),
                 sin(theta),  cos(theta);
-    double scale = gmm.parameters_[2];
-    Eigen::Vector2d pt(event.x, event.y);
+    const double scale = gmm.parameters_[2];
+    Eigen::Vector2d pt(ev_pt.x, ev_pt.y);
     vel = trans2D + (1 + scale) * rotation * pt - pt;
 
     // warp (the minus sign is because vel is defined from t_ref to t_k.
-    Eigen::Vector2d displacement = (event.ts.toSec() - t_ref) * vel;
-    warped_pt->x = event.x - displacement(0);
-    warped_pt->y = event.y - displacement(1);
-  }
-}
-
-void warpEvent_GMM_undistortion(
-  GeneralMotionModel &gmm,
-  const UndistortedEvent &uev,
-  const double t_ref,
-  cv::Point2d *warped_pt)
-{
-  // compute the optical flow velocity using the motion model
-  if(gmm.mmType_ == TranslationModel)
-  {
-    Eigen::Vector2d vel;
-    vel << gmm.parameters_[0];
-    gmm.parameters_[1];
-
-    // warp (the minus sign is because vel is defined from t_ref to t_k.
-    Eigen::Vector2d displacement = (uev.ts_.toSec() - t_ref) * vel;
-    warped_pt->x = uev.x_ - displacement(0);
-    warped_pt->y = uev.y_ - displacement(1);
-  }
-
-  if(gmm.mmType_ == RotationModel)
-  {
-    Eigen::Vector3d w;
-    w << gmm.parameters_[0],
-         gmm.parameters_[1],
-         gmm.parameters_[2];
-    Eigen::Vector3d ecoord_3D_rotated, ecoord_3d;
-    ecoord_3d << uev.x_,
-                 uev.y_,
-                  1;
-    ecoord_3D_rotated = ecoord_3d - (uev.ts_.toSec() - t_ref) * (w.cross(ecoord_3d));
-    warped_pt->x = ecoord_3D_rotated(0) / ecoord_3D_rotated(2);
-    warped_pt->y = ecoord_3D_rotated(1) / ecoord_3D_rotated(2);
-  }
-
-  if(gmm.mmType_ == AffineModel)
-  {
-    Eigen::Vector2d vel;
-    Eigen::Vector2d trans2D;
-    trans2D << gmm.parameters_[0],
-               gmm.parameters_[1];
-    Eigen::Matrix2d rotation;
-    double theta = gmm.parameters_[3];
-    rotation << cos(theta), -sin(theta),
-      sin(theta),  cos(theta);
-    double scale = gmm.parameters_[2];
-    Eigen::Vector2d pt(uev.x_, uev.y_);
-    vel = trans2D + (1 + scale) * rotation * pt - pt;
-
-    // warp (the minus sign is because vel is defined from t_ref to t_k.
-    Eigen::Vector2d displacement = (uev.ts_.toSec() - t_ref) * vel;
-    warped_pt->x = uev.x_ - displacement(0);
-    warped_pt->y = uev.y_ - displacement(1);
+    Eigen::Vector2d displacement = dt * vel;
+    warped_pt->x = ev_pt.x - displacement(0);
+    warped_pt->y = ev_pt.y - displacement(1);
   }
 }
 
 bool accumulateWarpedEvent(
-  const dvs_msgs::Event &event,
-  const int img_width,
-  const int img_height,
-  const cv::Point2d &ev_warped_pt,
-  cv::Mat *image_warped,
-  const OptionsWarp &optsWarp)
-{
-  const float polarity = (optsWarp.use_polarity_) ? 2.f * static_cast<float>(event.polarity) - 1.f : 1.f;
-
-  // Accumulate warped events, using bi-linear voting (polarity or count)
-  const int xx = ev_warped_pt.x, yy = ev_warped_pt.y;
-
-  // if warped point is within the image, accumulate its contribution
-  // to neighbouring four pixels.
-  if (1 <= xx && xx < img_width - 2 && 1 <= yy && yy < img_height - 2)
-  {
-    // Accumulate warped events on the IWE
-    // FILL IN ...  image_warped (4 pixels)
-    /* (x1,y1) --- (x2,y1) */
-    /*    |           |    */
-    /*    |           |    */
-    /* (x1,y2) --- (x2,y2) */
-    size_t x1 = xx;//std::floor(ev_warped_pt.x);
-    size_t y1 = yy;//std::floor(ev_warped_pt.y);
-    size_t x2 = xx+1;//std::ceil(ev_warped_pt.x);
-    size_t y2 = yy+1;//std::ceil(ev_warped_pt.y);
-
-    double delta_x = ev_warped_pt.x - x1;
-    double delta_y = ev_warped_pt.y - y1;
-
-    image_warped->at<float>(y1, x1) += polarity * (1 - delta_x) * (1 - delta_y);
-    image_warped->at<float>(y1, x2) += polarity * delta_x * (1 - delta_y);
-    image_warped->at<float>(y2, x1) += polarity * (1 - delta_x) * delta_y;
-    image_warped->at<float>(y2, x2) += polarity * delta_x * delta_y;
-    return true;
-  }
-  return false;
-}
-
-bool accumulateWarpedEvent_Undistortion(
-  const int img_width,
-  const int img_height,
   const cv::Point2d& ev_warped_pt,
-  cv::Mat* image_warped,
-  const OptionsWarp& optsWarp)
+  const float polarity,
+  cv::Mat* image_warped)
 {
   // Accumulate warped events, using bi-linear voting (polarity or count)
-  const int xx = ev_warped_pt.x, yy = ev_warped_pt.y;
+  const int xx = ev_warped_pt.x,
+            yy = ev_warped_pt.y;
 
   // if warped point is within the image, accumulate its contribution
-  // to neighbouring four pixels.
-  if (1 <= xx && xx < img_width - 2 && 1 <= yy && yy < img_height - 2)
+  // to its four neighbouring pixels.
+  if (1 <= xx && xx < image_warped->cols-2 && 1 <= yy && yy < image_warped->rows-2)
   {
     // Accumulate warped events on the IWE
-    // FILL IN ...  image_warped (4 pixels)
-    /* (x1,y1) --- (x2,y1) */
-    /*    |           |    */
-    /*    |           |    */
-    /* (x1,y2) --- (x2,y2) */
-    size_t x1 = xx;//std::floor(ev_warped_pt.x);
-    size_t y1 = yy;//std::floor(ev_warped_pt.y);
-    size_t x2 = xx+1;//std::ceil(ev_warped_pt.x);
-    size_t y2 = yy+1;//std::ceil(ev_warped_pt.y);
+    // image_warped (4 pixels)
+    /* (xx,yy)   --- (xx+1,yy)   */
+    /*    |              |       */
+    /*    |              |       */
+    /* (xx,yy+1) --- (xx+1,yy+1) */
 
-    double delta_x = ev_warped_pt.x - x1;
-    double delta_y = ev_warped_pt.y - y1;
+    const float dx = ev_warped_pt.x - xx,
+                dy = ev_warped_pt.y - yy;
 
-    image_warped->at<float>(y1, x1) += (1 - delta_x) * (1 - delta_y);
-    image_warped->at<float>(y1, x2) += delta_x * (1 - delta_y);
-    image_warped->at<float>(y2, x1) += (1 - delta_x) * delta_y;
-    image_warped->at<float>(y2, x2) += delta_x * delta_y;
+    image_warped->at<float>(yy  ,xx  ) += polarity*(1.f-dx)*(1.f-dy);
+    image_warped->at<float>(yy  ,xx+1) += polarity*      dx*(1.f-dy);
+    image_warped->at<float>(yy+1,xx  ) += polarity*(1.f-dx)*dy;
+    image_warped->at<float>(yy+1,xx+1) += polarity*      dx*dy;
     return true;
   }
   return false;
@@ -222,29 +113,25 @@ size_t computeImageOfWarpedEvents(
   cv::Mat *image_warped,
   const OptionsWarp &optsWarp)
 {
-  const int width = img_size.width;
-  const int height = img_size.height;
-
   // Create image of warped events (IWE)
-  *image_warped = cv::Mat::zeros(height, width, CV_32FC1);
+  *image_warped = cv::Mat::zeros(img_size, CV_32FC1);
 
   // Loop through all events
   size_t numAccumulation = 0;
   for (const dvs_msgs::Event &ev : pvEvent_involved)
   {
-    // Warp event according to candidate flow and accumulate on the IWE
-    cv::Point2d warped_pt;
-    warpEvent(model, ev, t_ref, &warped_pt);
-    if(accumulateWarpedEvent(ev, width, height, warped_pt, image_warped, optsWarp))
+    // Warp event according to candidate motion...
+    cv::Point2d ev_warped_pt;
+    warpEvent(model, ev, t_ref, &ev_warped_pt);
+    // ...and accumulate on the IWE
+    const float polarity = (optsWarp.use_polarity_) ? 2.f * static_cast<float>(ev.polarity) - 1.f : 1.f;
+    if( accumulateWarpedEvent(ev_warped_pt, polarity, image_warped) )
       numAccumulation++;
   }
 
   // Smooth the IWE (to spread the votes)
   if (optsWarp.blur_sigma_ > 0)
-  {
-    cv::GaussianBlur(*image_warped, *image_warped,
-                     cv::Size2d(optsWarp.blur_sigma_, optsWarp.blur_sigma_), optsWarp.blur_sigma_);
-  }
+    cv::GaussianBlur(*image_warped, *image_warped, cv::Size2d(0,0), optsWarp.blur_sigma_);
 
   return numAccumulation;
 }
@@ -257,29 +144,26 @@ size_t computeImageOfWarpedEvents_GMM(
   cv::Mat *image_warped,
   const OptionsWarp &optsWarp)
 {
-  const int width = img_size.width;
-  const int height = img_size.height;
-
   // Create image of warped events (IWE)
-  *image_warped = cv::Mat::zeros(height, width, CV_32FC1);
+  *image_warped = cv::Mat::zeros(img_size, CV_32FC1);
 
   // Loop through all events
   size_t numAccumulation = 0;
   for (const dvs_msgs::Event &ev : pvEvent_involved)
   {
-    // Warp event according to candidate flow and accumulate on the IWE
-    cv::Point2d warped_pt;
-    warpEvent_GMM(gmm, ev, t_ref, &warped_pt);
-    if(accumulateWarpedEvent(ev, width, height, warped_pt, image_warped, optsWarp))
+    // Warp event according to candidate motion...
+    cv::Point2d ev_warped_pt;
+    cv::Point2d ev_pt(ev.x,ev.y);
+    warpEvent_GMM(gmm, ev_pt, ev.ts.toSec(), t_ref, &ev_warped_pt);
+    // ...and accumulate on the IWE
+    const float polarity = (optsWarp.use_polarity_) ? 2.f * static_cast<float>(ev.polarity) - 1.f : 1.f;
+    if( accumulateWarpedEvent(ev_warped_pt, polarity, image_warped) )
       numAccumulation++;
   }
 
   // Smooth the IWE (to spread the votes)
   if (optsWarp.blur_sigma_ > 0)
-  {
-    cv::GaussianBlur(*image_warped, *image_warped,
-                     cv::Size2d(optsWarp.blur_sigma_, optsWarp.blur_sigma_), optsWarp.blur_sigma_);
-  }
+    cv::GaussianBlur(*image_warped, *image_warped, cv::Size2d(0,0), optsWarp.blur_sigma_);
 
   return numAccumulation;
 }
@@ -293,29 +177,25 @@ size_t computeImageOfWarpedEvents_GMM_undistortion(
   const OptionsWarp& optsWarp
 )
 {
-  const int width = img_size.width;
-  const int height = img_size.height;
-
   // Create image of warped events (IWE)
-  *image_warped = cv::Mat::zeros(height, width, CV_32FC1);
+  *image_warped = cv::Mat::zeros(img_size, CV_32FC1);
 
   // Loop through all events
   size_t numAccumulation = 0;
-  for (const UndistortedEvent &uev : pvEvent_undistorted)
+  for (const UndistortedEvent &ev : pvEvent_undistorted)
   {
-    // Warp event according to candidate flow and accumulate on the IWE
-    cv::Point2d warped_pt;
-    warpEvent_GMM_undistortion(gmm, uev, t_ref, &warped_pt);
-    if(accumulateWarpedEvent_Undistortion(width, height, warped_pt, image_warped, optsWarp))
+    // Warp event according to candidate motion...
+    cv::Point2d ev_warped_pt;
+    cv::Point2d ev_pt(ev.x_,ev.y_);
+    warpEvent_GMM(gmm, ev_pt, ev.ts_.toSec(), t_ref, &ev_warped_pt);
+    // ...and accumulate on the IWE
+    if( accumulateWarpedEvent(ev_warped_pt, 1.f, image_warped) )
       numAccumulation++;
   }
 
   // Smooth the IWE (to spread the votes)
   if (optsWarp.blur_sigma_ > 0)
-  {
-    cv::GaussianBlur(*image_warped, *image_warped,
-                     cv::Size2d(optsWarp.blur_sigma_, optsWarp.blur_sigma_), optsWarp.blur_sigma_);
-  }
+    cv::GaussianBlur(*image_warped, *image_warped, cv::Size2d(0,0), optsWarp.blur_sigma_);
 
   return numAccumulation;
 }

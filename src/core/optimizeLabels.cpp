@@ -47,14 +47,16 @@ void dataTermHyperThreadGMM(dataTermJobGMM& job, double lambda)
     {
       GeneralMotionModel& gmm = mGmmPool.find(int(l))->second;
       // compute warped coordinate
-      cv::Point2d ev_warped_coordinate;
+      cv::Point2d ev_warped_pt;
 //      dvs_msgs::Event ev_undist = vEventSite[i].ev_;
 //      ev_undist.x = vEventSite[i].ev_coord_undistorted_(0);
 //      ev_undist.y = vEventSite[i].ev_coord_undistorted_(1);
-//      warpEvent_GMM(gmm, ev_undist, t_ref, &ev_warped_coordinate);
-      warpEvent_GMM_undistortion(gmm, vEventSite[i].ev_undistort_, t_ref, &ev_warped_coordinate);
+//      warpEvent_GMM(gmm, ev_undist, t_ref, &ev_warped_pt);
+      UndistortedEvent& uev = vEventSite[i].ev_undistort_;
+      cv::Point2d ev_pt(uev.x_,uev.y_);
+      warpEvent_GMM(gmm, ev_pt, uev.ts_.toSec(), t_ref, &ev_warped_pt);
       // get cost
-      Eigen::Vector2d ev_coordinate(ev_warped_coordinate.x, ev_warped_coordinate.y);
+      Eigen::Vector2d ev_coordinate(ev_warped_pt.x, ev_warped_pt.y);
       double cost = bilinearIntepolation(
         job.pmIWE_LookUp_Tables_->find(l)->second, ev_coordinate, 255.0);
 //      LOG(INFO) << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";

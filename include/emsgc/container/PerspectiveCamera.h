@@ -1,5 +1,4 @@
-#ifndef EMSGC_CONTAINER_PERSPECTIVECAMERA_H
-#define EMSGC_CONTAINER_PERSPECTIVECAMERA_H
+#pragma once
 
 #include <string>
 #include <Eigen/Eigen>
@@ -40,5 +39,3 @@ class PerspectiveCamera
 };
 }
 }
-
-#endif //EMSGC_CONTAINER_PERSPECTIVECAMERA_H

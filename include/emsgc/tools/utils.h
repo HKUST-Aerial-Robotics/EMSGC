@@ -1,5 +1,4 @@
-#ifndef EMSGC_TOOLS_UTILS_H
-#define EMSGC_TOOLS_UTILS_H
+#pragma once
 
 #include <Eigen/Eigen>
 #include <iostream>
@@ -16,7 +15,6 @@ namespace emsgc
 using namespace container;
 namespace tools
 {
-#define PI 3.1415926;
 using EventQueue = std::deque<dvs_msgs::Event>;
 using EventVector = std::vector<dvs_msgs::Event>;
 using vEigenVector4i = std::vector<Eigen::Vector4i, Eigen::aligned_allocator<Eigen::Vector4i> >;
@@ -137,9 +135,6 @@ struct OptionsMethod
 
   // Options of the image of warped events
   OptionsWarp opts_warp_;
-
-  // Verbosity / printing level
-  unsigned int verbose_ = 0;
 };
 
 inline double bilinearIntepolation(
@@ -231,5 +226,3 @@ inline void drawEventImage(
 
 }
 }
-
-#endif //EMS_TOOLS_UTILS_H

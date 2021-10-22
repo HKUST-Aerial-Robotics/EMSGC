@@ -6,9 +6,9 @@
 #include <glog/logging.h>
 
 #include <emsgc/core/event_motion_segmentation.h>
-#include "trash/TimeSurface.h"
 #include <emsgc/tools/visualizer.h>
 #include <emsgc/tools/TicToc.h>
+#include <filesystem>
 
 #define EMS_LOG
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
   // load dirs
   if(argc != 5)
   {
-    LOG(ERROR) << "The input is wrong. The correct command is as follows: \n";
+    LOG(ERROR) << "Wrong input. The correct command is as follows: \n";
     LOG(ERROR) << "./ems path_to_calib path_to_cfg path_to_event path_to_save_result";
     exit(-1);
   }
@@ -30,8 +30,12 @@ int main(int argc, char** argv)
   std::string raw_event_dir(argv[3]);
   std::string result_dir(argv[4]);
   std::string result_raw_iwe_dir(result_dir + "/raw_IWEs");
+  std::filesystem::create_directories(result_raw_iwe_dir);
   std::string result_seg_iwe_dir(result_dir + "/seg_IWEs");
+  std::filesystem::create_directories(result_seg_iwe_dir);
   std::string result_seg_label_dir(result_dir + "/seg_labels");
+  std::filesystem::create_directories(result_seg_label_dir);
+  //std::system(("ls -l " + result_dir).c_str());
 
   LOG(INFO) << "******************************************************************";
   LOG(INFO) << "**********************  I/O Directories  *************************";
@@ -54,7 +58,7 @@ int main(int argc, char** argv)
   // load option (parameters)
   ems.loadBaseOptions(option_dir);
 
-  // load all events (in the sequence) to a EventQueue (deque)
+  // load all events (in the sequence) to an EventQueue (deque)
   ems.loadAllEventsFromTxt(raw_event_dir);
   LOG(INFO) << "Loaded " << ems.getEventQueueLength() << " events in total.";
 
@@ -66,13 +70,14 @@ int main(int argc, char** argv)
 
   // Outer Loop (all gt mask)
   size_t frameID = 0;
-  double t_seg = ems.ts_begin_ + ems.advanceNum_ * ems.ts_step_;
-  for(; t_seg < ems.ts_end_; t_seg += ems.ts_step_, frameID++)
+  for(double t_seg = ems.ts_begin_ + ems.advanceNum_ * ems.ts_step_;
+    t_seg < ems.ts_end_;
+    t_seg += ems.ts_step_, frameID++)
   {
     LOG(INFO) << "*********************************************";
     LOG(INFO) << "*****************   EMSGC   *****************";
     LOG(INFO) << "*********************************************";
-    LOG(INFO) << "This is the " << frameID << " frame.";
+    LOG(INFO) << "This is event-window # " << frameID;
 
     ros::Time t_ref(t_seg);
     ros::Time t_end(ems.getTemporalBound(t_ref.toSec()));
@@ -146,27 +151,30 @@ int main(int argc, char** argv)
     // display IWE without motion compensation
     GeneralMotionModel gmm0;
     ems.drawIWE_undistorted(gmm0,t_ref, raw_iwe);
-    std::string iwe_name = std::string(std::to_string(frameID) + ".png");
+    std::ostringstream ss;
+    ss << std::setw(4) << std::setfill('0') << frameID;
+    std::string iwe_name(ss.str() + ".png");
     if(ems.bSaveResult_)
-      ems.saveIWE(raw_iwe, result_raw_iwe_dir, iwe_name);
+      cv::imwrite(result_raw_iwe_dir + "/" + iwe_name, raw_iwe);
     if(ems.bDisplayResult_)
       cv::imshow("IWE without Compensation", raw_iwe);
 
     // display labeled IWE (compensated accordingly)
-    drawColorIWE_with_EventClustersGMM(
+    //drawColorIWE_with_EventClustersGMM(
+    drawColorIWE_with_EventClustersGMM_HSV(
       ems.mEvtClustersGMM_, t_ref, ems.opts_.opts_warp_, ems.img_size_.width, ems.img_size_.height, labeled_iwe);
     if(ems.bSaveResult_)
-      ems.saveIWE(labeled_iwe, result_seg_iwe_dir, iwe_name);
+      cv::imwrite(result_seg_iwe_dir + "/" + iwe_name, labeled_iwe);
     if(ems.bDisplayResult_)
     {
       cv::imshow("Labeled IWE (GMM)", labeled_iwe);
       cv::waitKey(0);
     }
 
-    /* save seg label txt */
+    // save seg label txt
     if(ems.bSaveResult_)
     {
-      std::string fileName(std::to_string(frameID) + ".txt");
+      std::string fileName(ss.str() + ".txt");
       ems.saveSparseLabelMap(t_ref, ems.opts_.opts_warp_, result_seg_label_dir, fileName);
     }
 

@@ -8,7 +8,6 @@
 
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_multimin.h>
-//#include <gsl/gsl_blas.h>
 
 #include <opencv2/highgui/highgui.hpp>
 
@@ -34,23 +33,19 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_2D_FromeUndistortedEv
   oAuxdata.opts = &opts_;
   oAuxdata.num_dof = 2;
 
-  gsl_vector *gmm_gsl = gsl_vector_alloc (2);
+  gsl_vector *gmm_gsl = gsl_vector_alloc (oAuxdata.num_dof);
 
   // Brute-force search
-  double min_mx = trans2D_range(0), max_mx = trans2D_range(1);
-  double min_my = trans2D_range(0), max_my = trans2D_range(1);
-  double step_mx = trans2D_step;
-  double step_my = trans2D_step;
+  const double min_mx = trans2D_range(0), max_mx = trans2D_range(1);
+  const double min_my = trans2D_range(0), max_my = trans2D_range(1);
+  const double step_mx = trans2D_step, step_my = trans2D_step;
 
-  if(opts_.verbose_)
-  {
-    LOG(INFO) << "Trans2D parameters search:";
-    LOG(INFO) << "mx: " << min_mx << " -> " << max_mx << " step: " << step_mx;
-    LOG(INFO) << "my: " << min_my << " -> " << max_my << " step: " << step_my;
-  }
+  VLOG(1) << "Trans2D parameters search:";
+  VLOG(1) << "mx: " << min_mx << " -> " << max_mx << " step: " << step_mx;
+  VLOG(1) << "my: " << min_my << " -> " << max_my << " step: " << step_my;
 
   // brute-force search in the trans2D dimensions.
-  double minimum_cost = 0.0;
+  double minimum_cost = 0.;
   double opt_mx = 0., opt_my = 0.;
   for(double mx = min_mx; mx <= max_mx; mx += step_mx)
   {
@@ -61,10 +56,7 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_2D_FromeUndistortedEv
 
       const double cost = contrast_f_numerical_GMM_undistortion(gmm_gsl, &oAuxdata);
 
-      if(opts_.verbose_)
-      {
-        LOG(INFO) << "gmm (2D): [" << mx << ", " << my << "], cost: " << cost;
-      }
+      VLOG(2) << "gmm (2D): [" << mx << ", " << my << "], cost: " << cost;
 
       if(cost < minimum_cost)
       {
@@ -74,8 +66,7 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_2D_FromeUndistortedEv
       }
     }
   }
-  if(opts_.verbose_)
-    LOG(INFO) << "Best trans2D parameters: " << opt_mx << " , " << opt_my;
+  VLOG(1) << "Best trans2D parameters: " << opt_mx << " , " << opt_my;
 
   gmm.parameters_.clear();
   gmm.parameters_.push_back(opt_mx);
@@ -99,24 +90,21 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_3D_FromeUndistortedEv
   oAuxdata.opts = &opts_;
   oAuxdata.num_dof = 3;
 
-  gsl_vector *gmm_gsl = gsl_vector_alloc (3);
+  gsl_vector *gmm_gsl = gsl_vector_alloc (oAuxdata.num_dof);
 
   // Brute-force search
-  double min_w1 = angular3D_range(0), max_w1 = angular3D_range(1);
-  double min_w2 = angular3D_range(2), max_w2 = angular3D_range(3);
-  double min_w3 = angular3D_range(4), max_w3 = angular3D_range(5);
-  double step_w = angular3D_step;
+  const double min_w1 = angular3D_range(0), max_w1 = angular3D_range(1);
+  const double min_w2 = angular3D_range(2), max_w2 = angular3D_range(3);
+  const double min_w3 = angular3D_range(4), max_w3 = angular3D_range(5);
+  const double step_w = angular3D_step;
 
-  if(opts_.verbose_)
-  {
-    LOG(INFO) << "Angular3D parameters search:";
-    LOG(INFO) << "w1: " << min_w1 << " -> " << max_w1 << " stepw1: " << step_w;
-    LOG(INFO) << "w2: " << min_w2 << " -> " << max_w2 << " stepw2: " << step_w;
-    LOG(INFO) << "w3: " << min_w3 << " -> " << max_w3 << " stepw3: " << step_w;
-  }
+  VLOG(1) << "Angular3D parameters search:";
+  VLOG(1) << "w1: " << min_w1 << " -> " << max_w1 << " stepw1: " << step_w;
+  VLOG(1) << "w2: " << min_w2 << " -> " << max_w2 << " stepw2: " << step_w;
+  VLOG(1) << "w3: " << min_w3 << " -> " << max_w3 << " stepw3: " << step_w;
 
   // brute-force search in the trans2D dimensions.
-  double minimum_cost = 0.0;
+  double minimum_cost = 0.;
   double opt_w1 = 0., opt_w2 = 0., opt_w3 = 0.;
   for(double w1 = min_w1; w1 <= max_w1; w1 += step_w)
   {
@@ -130,10 +118,7 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_3D_FromeUndistortedEv
 
         const double cost = contrast_f_numerical_GMM_undistortion(gmm_gsl, &oAuxdata);
 
-        if(opts_.verbose_)
-        {
-          LOG(INFO) << "gmm (3D): [" << w1 << ", " << w2 << ", " << w3 << "], cost: " << cost;
-        }
+        VLOG(2) << "gmm (3D): [" << w1 << ", " << w2 << ", " << w3 << "], cost: " << cost;
 
         if(cost < minimum_cost)
         {
@@ -145,8 +130,7 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_3D_FromeUndistortedEv
       }
     }
   }
-  if(opts_.verbose_)
-    LOG(INFO) << "Best Angular3D parameters: " << opt_w1 << " , " << opt_w2 << " , " << opt_w3;
+  VLOG(1) << "Best Angular3D parameters: " << opt_w1 << " , " << opt_w2 << " , " << opt_w3;
 
   gmm.parameters_.clear();
   gmm.parameters_.push_back(opt_w1);
@@ -175,26 +159,23 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_4D_FromeUndistortedEv
   oAuxdata.opts = &opts_;
   oAuxdata.num_dof = 4;
 
-  gsl_vector *gmm_gsl = gsl_vector_alloc (4);
+  gsl_vector *gmm_gsl = gsl_vector_alloc (oAuxdata.num_dof);
 
   // Brute-force search
-  double min_mx = trans2D_range(0), max_mx = trans2D_range(1),
-    min_my = trans2D_range(2), max_my = trans2D_range(3);
-  double step_mx = trans2D_step(0), step_my = trans2D_step(1);
-  double min_ms = scale_range(0), max_ms = scale_range(1);
-  double min_mTheta = theta_range(0), max_mTheta = theta_range(1);
+  const double min_mx = trans2D_range(0), max_mx = trans2D_range(1),
+               min_my = trans2D_range(2), max_my = trans2D_range(3);
+  const double step_mx = trans2D_step(0), step_my = trans2D_step(1);
+  const double min_ms = scale_range(0), max_ms = scale_range(1);
+  const double min_mTheta = theta_range(0), max_mTheta = theta_range(1);
 
-  if(opts_.verbose_)
-  {
-    LOG(INFO) << "Affine4D parameters search:";
-    LOG(INFO) << "mx: " << min_mx << " -> " << max_mx << " step: " << step_mx;
-    LOG(INFO) << "my: " << min_my << " -> " << max_my << " step: " << step_my;
-    LOG(INFO) << "m_scale: " << min_ms << " -> " << max_ms << " step: " << scale_step;
-    LOG(INFO) << "m_theta: " << min_mTheta << " -> " << max_mTheta << " step: " << theta_step;
-  }
+  VLOG(1) << "Affine4D parameters search:";
+  VLOG(1) << "mx: " << min_mx << " -> " << max_mx << " step: " << step_mx;
+  VLOG(1) << "my: " << min_my << " -> " << max_my << " step: " << step_my;
+  VLOG(1) << "m_scale: " << min_ms << " -> " << max_ms << " step: " << scale_step;
+  VLOG(1) << "m_theta: " << min_mTheta << " -> " << max_mTheta << " step: " << theta_step;
 
   // 1. brute-force search in the trans2D dimensions.
-  double minimum_cost = 0.0;
+  double minimum_cost = 0.;
   double opt_mx = 0., opt_my = 0., opt_scale = 0., opt_theta = 0.;
   for(double mx = min_mx; mx <= max_mx; mx += step_mx)
   {
@@ -206,15 +187,12 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_4D_FromeUndistortedEv
         {
           gsl_vector_set(gmm_gsl, 0, mx);
           gsl_vector_set(gmm_gsl, 1, my);
-          gsl_vector_set(gmm_gsl, 2, m_scale);// scale
-          gsl_vector_set(gmm_gsl, 3, m_theta);// theta
+          gsl_vector_set(gmm_gsl, 2, m_scale); // scale
+          gsl_vector_set(gmm_gsl, 3, m_theta); // theta
 
           const double cost = contrast_f_numerical_GMM_undistortion(gmm_gsl, &oAuxdata);
 
-          if(opts_.verbose_)
-          {
-            LOG(INFO) << "gmm (4D): [" << mx << ", " << my << ", " << m_scale << ", " << m_theta << "], cost: " << cost;
-          }
+          VLOG(2) << "gmm (4D): [" << mx << ", " << my << ", " << m_scale << ", " << m_theta << "], cost: " << cost;
 
           if(cost < minimum_cost)
           {
@@ -226,9 +204,8 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_4D_FromeUndistortedEv
       }
     }
   }
-  if(opts_.verbose_)
-    LOG(INFO) << "Best Affine 4D parameters: " << opt_mx << " , " << opt_my
-              << " " << opt_scale << " , " << opt_theta;
+  VLOG(1) << "Best Affine 4D parameters: " << opt_mx << " , " << opt_my
+          << " " << opt_scale << " , " << opt_theta;
 
   gmm.parameters_.clear();
   gmm.parameters_.push_back(opt_mx);
@@ -286,7 +263,7 @@ double EventMotionSegmentation::gmmFittingUndistortion(
   oAuxdata.opts = &opts_;
   oAuxdata.num_dof = numDoF;
 
-  const int num_params = numDoF; // Size of global flow
+  const int num_params = numDoF;
   solver_info.n = num_params; // Size of the parameter vector
   solver_info.f = contrast_f_numerical_GMM_undistortion; // Cost function
   solver_info.df = contrast_df_numerical_GMM_undistortion; // Gradient of cost function
@@ -295,35 +272,12 @@ double EventMotionSegmentation::gmmFittingUndistortion(
 
   //Initial parameter vector
   gsl_vector *vx = gsl_vector_alloc (num_params);
-  switch (num_params)
+  if (!(2<= num_params && num_params <=4))
   {
-    case 2:
-    {
-      gsl_vector_set(vx, 0, gmm.parameters_[0]);
-      gsl_vector_set(vx, 1, gmm.parameters_[1]);
-      break;
-    }
-    case 3:
-    {
-      gsl_vector_set(vx, 0, gmm.parameters_[0]);
-      gsl_vector_set(vx, 1, gmm.parameters_[1]);
-      gsl_vector_set(vx, 2, gmm.parameters_[2]);
-      break;
-    }
-    case 4:
-    {
-      gsl_vector_set(vx, 0, gmm.parameters_[0]);
-      gsl_vector_set(vx, 1, gmm.parameters_[1]);
-      gsl_vector_set(vx, 2, gmm.parameters_[2]);
-      gsl_vector_set(vx, 3, gmm.parameters_[3]);
-      break;
-    }
-    default:
-    {
       LOG(INFO) << "The num_params: " << num_params << " is not defined !!!!!!!!!!!!";
       exit(-1);
-    }
   }
+  for (int j=0; j <num_params; ++j){ gsl_vector_set(vx, j, gmm.parameters_[j]); }
 
   //Initialize solver
   gsl_multimin_fdfminimizer *solver = gsl_multimin_fdfminimizer_alloc (solver_type, num_params);
@@ -337,16 +291,17 @@ double EventMotionSegmentation::gmmFittingUndistortion(
   //ITERATE
   const int num_max_line_searches = 50;
   int status;
-  const double epsabs_grad = 1e-3, tolfun=1e-2;
+  const double epsabs_grad = 1e-3, tolfun = 1e-2;
   double cost_new = 1e9, cost_old = 1e9;
   size_t iter = 0;
-//  if (opts_.verbose_ >= 2)
-//  {
-//    LOG(INFO) << "Optimization. Solver type = " << solver_type->name;
-//    LOG(INFO) << "iter=" << std::setw(3) << iter << "  vel=["
-//              << gsl_vector_get(solver->x, 0) << " "
-//              << gsl_vector_get(solver->x, 1) << "]  cost=" << std::setprecision(8) << solver->f;
-//  }
+  VLOG(2) << "Optimization. Solver type = " << solver_type->name;
+  if (VLOG_IS_ON(2))
+  {
+    stringstream res;
+    for (int j=0; j <num_params; ++j){ res << gsl_vector_get(solver->x, j) << " "; }
+    VLOG(2) << "iter=" << std::setw(3) << iter << " vec =["
+            << res.str() << "]  cost=" << std::setprecision(8) << solver->f;
+  }
 
   do
   {
@@ -355,12 +310,13 @@ double EventMotionSegmentation::gmmFittingUndistortion(
     status = gsl_multimin_fdfminimizer_iterate (solver);
     //status == GLS_SUCCESS (0) means that the iteration reduced the function value
 
-//    if (opts_.verbose_ >= 2)
-//    {
-//      LOG(INFO) << "iter=" << std::setw(3) << iter << "  vel=["
-//                << gsl_vector_get(solver->x, 0) << " "
-//                << gsl_vector_get(solver->x, 1) << "]  cost=" << std::setprecision(8) << solver->f;
-//    }
+    if (VLOG_IS_ON(2))
+    {
+      stringstream res;
+      for (int j=0; j <num_params; ++j){ res << gsl_vector_get(solver->x, j) << " "; }
+      VLOG(2) << "iter=" << std::setw(3) << iter << " vec =["
+              << res.str() << "]  cost=" << std::setprecision(8) << solver->f;
+    }
 
     if (status == GSL_SUCCESS)
     {
@@ -368,8 +324,7 @@ double EventMotionSegmentation::gmmFittingUndistortion(
       cost_new = gsl_multimin_fdfminimizer_minimum(solver);
       if ( fabs( 1-cost_new/(cost_old+1e-7) ) < tolfun )
       {
-        if (opts_.verbose_ >= 3)
-          LOG(INFO) << "progress tolerance reached.";
+        VLOG(3) << "progress tolerance reached.";
         break;
       }
       else
@@ -379,64 +334,28 @@ double EventMotionSegmentation::gmmFittingUndistortion(
     //Test convergence due to absolute norm of the gradient
     if (GSL_SUCCESS == gsl_multimin_test_gradient (solver->gradient, epsabs_grad))
     {
-      if (opts_.verbose_ >= 3)
-        LOG(INFO) << "gradient tolerance reached.";
+      VLOG(3) << "gradient tolerance reached.";
       break;
     }
 
     if (status != GSL_CONTINUE)
     {
       // The iteration was not successful (did not reduce the function value)
-      if (opts_.verbose_ >= 3)
-        LOG(INFO) << "stopped iteration; status = " << status;
+      VLOG(3) << "stopped iteration; status = " << status;
+      VLOG_IF(3, (GSL_ENOPROG == status)) << "iteration is not making progress towards solution";
       break;
     }
   }
   while (status == GSL_CONTINUE && iter < num_max_line_searches);
 
-  //SAVE RESULTS (best global flow velocity)
-
-  //Convert from GSL to OpenCV format
+  //SAVE RESULTS (best motion parameters)
+  //Convert from GSL to output format
   gsl_vector *final_x = gsl_multimin_fdfminimizer_x(solver);
-
-  // FILL IN ...  the return value of vel_ using  final_x
-  if(num_params == 1)
-  {
-    gmm.parameters_[0] = final_x->data[0];
-  }
-  else if(num_params == 2)
-  {
-    gmm.parameters_[0] = final_x->data[0];
-    gmm.parameters_[1] = final_x->data[1];
-  }
-  else if(num_params == 3)
-  {
-    gmm.parameters_[0] = final_x->data[0];
-    gmm.parameters_[1] = final_x->data[1];
-    gmm.parameters_[2] = final_x->data[2];
-  }
-  else if(num_params == 4)
-  {
-    gmm.parameters_[0] = final_x->data[0];
-    gmm.parameters_[1] = final_x->data[1];
-    gmm.parameters_[2] = final_x->data[2];
-    gmm.parameters_[3] = final_x->data[3];
-  }
-  else
-  {
-    LOG(INFO) << "The num_params is not defined !!!!!!!!!!!!";
-    exit(-1);
-  }
-
+  for (int j=0; j <num_params; ++j){ gmm.parameters_[j] = final_x->data[j]; }
   const double final_cost = gsl_multimin_fdfminimizer_minimum(solver);
 
-//  if (opts_.verbose_ >= 1)
-//  {
-//    LOG(INFO) << "--- Initial cost = " << std::setprecision(8) << initial_cost;
-//    LOG(INFO) << "--- Final cost   = " << std::setprecision(8) << final_cost;
-//    LOG(INFO) << "--- iter=" << std::setw(3) << iter << "  mm=["
-//              << mm.m_x_ << ", " << mm.m_y_ << ", " << mm.m_s_ << ", " << mm.m_theta_ << "]";
-//  }
+  VLOG(1) << "--- Initial cost = " << std::fixed << std::setprecision(8) << initial_cost;
+  VLOG(1) << "--- Final cost   = " << std::fixed << std::setprecision(8) << final_cost;
 
   //Release memory used during optimization
   gsl_multimin_fdfminimizer_free (solver);

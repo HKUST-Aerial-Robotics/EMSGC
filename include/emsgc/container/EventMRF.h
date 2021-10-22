@@ -1,5 +1,4 @@
-#ifndef EMSGC_CONTAINER_EVENTMRF_H
-#define EMSGC_CONTAINER_EVENTMRF_H
+#pragma once
 
 #include <glog/logging.h>
 #include <emsgc/container/EventQueueMat.h>
@@ -67,4 +66,3 @@ struct EventClusterGMM
  * */
 }
 }
-#endif //EMSGC_CONTAINER_EVENTMRF_H

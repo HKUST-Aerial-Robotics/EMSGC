@@ -1,5 +1,4 @@
-#ifndef EMSGC_TOOLS_TICTOK_H
-#define EMSGC_TOOLS_TICTOK_H
+#pragma once
 
 //#pragma once
 #include <ctime>
@@ -35,5 +34,3 @@ class TicToc
 };
 }
 }
-
-#endif //EMSGC_TOOLS_TICTOK_H

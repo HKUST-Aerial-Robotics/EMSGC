@@ -4,7 +4,7 @@ project(emsgc)
 find_package(catkin_simple REQUIRED)
 catkin_simple(ALL_DEPS_REQUIRED)
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++17 -O3")
 
 find_package(OpenCV REQUIRED)
 
@@ -17,7 +17,7 @@ pkg_check_modules(gsl REQUIRED gsl)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include gco delaunator-cpp-master/include)
+include_directories(include gco ${OpenCV_INCLUDE_DIRS} ../delaunator-cpp/include)
 
 set(HEADERS
     include/emsgc/core/event_motion_segmentation.h
@@ -34,7 +34,7 @@ set(HEADERS
     gco/GCoptimization.h
     gco/graph.h
     gco/LinkedBlockList.h
-    delaunator-cpp-master/include/delaunator.hpp)
+    ../delaunator-cpp/include/delaunator.hpp)
 
 set(SOURCES
     src/container/PerspectiveCamera.cpp
@@ -50,6 +50,6 @@ set(SOURCES
     gco/maxflow.cpp)
 cs_add_library(${PROJECT_NAME}_LIB ${HEADERS} ${SOURCES})
 
-## Node esvo_Mapping
+## Node
 cs_add_executable(emsgc_main emsgc_main.cpp)
 target_link_libraries(emsgc_main ${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} yaml-cpp ${gsl_LIBRARIES})

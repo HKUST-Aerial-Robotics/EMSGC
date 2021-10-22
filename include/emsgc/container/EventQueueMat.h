@@ -1,5 +1,4 @@
-#ifndef EMSGC_CONTAINER_EVENTQUEUEMAT_H
-#define EMSGC_CONTAINER_EVENTQUEUEMAT_H
+#pragma once
 #include <emsgc/tools/utils.h>
 #include <glog/logging.h>
 
@@ -301,5 +300,3 @@ struct UndistortedEvent
 // getSubStVolume
 // --> seg's coordinates ==> mask for IWE
 // --> involved events ==> compute IWE and contrast
-
-#endif //EMSGC_CONTAINER_EVENTQUEUEMAT_H
