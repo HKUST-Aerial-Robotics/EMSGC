@@ -2,7 +2,7 @@
   <node name="emsgc_main" pkg="emsgc" type="emsgc_main" output="screen" required="true"
     args="/home/zhouyi/catkin_ws/src/EMSGC/calib/EED
           /home/zhouyi/catkin_ws/src/EMSGC/cfg/EED/what_is_background.yaml
-          /home/zhouyi/workspace/dataset/EMSGC_release/EED/what_is_background/events_filtered.txt
+          /home/zhouyi/workspace/dataset/DVS/EMSGC_DATASET/EED/what_is_background/events_filtered.txt
           /home/zhouyi/catkin_ws/src/EMSGC/result/EED/what_is_background">
   </node>
 </launch>

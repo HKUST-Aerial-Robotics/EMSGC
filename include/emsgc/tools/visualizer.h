@@ -240,7 +240,7 @@ namespace emsgc
 #if (CV_VERSION_MAJOR >= 4)
       cv::cvtColor(output,output,cv::COLOR_GRAY2BGR);
 #else
-      cv::cvtColor(output,output,cv_GRAY2BGR);
+      cv::cvtColor(output,output,CV_GRAY2BGR);
 #endif
       for(size_t y = 0; y < height; y++)
         for(size_t x = 0; x < width; x++)
@@ -269,7 +269,7 @@ namespace emsgc
 #if (CV_VERSION_MAJOR >= 4)
       cv::cvtColor(output,output,cv::COLOR_GRAY2BGR);
 #else
-      cv::cvtColor(output,output,cv_GRAY2BGR);
+      cv::cvtColor(output,output,CV_GRAY2BGR);
 #endif
 
       // draw each sub IWE
@@ -327,7 +327,7 @@ namespace emsgc
 #if (CV_VERSION_MAJOR >= 4)
       cv::cvtColor(output, output, cv::COLOR_GRAY2BGR);
 #else
-      cv::cvtColor(output,output,cv_GRAY2BGR);
+      cv::cvtColor(output,output,CV_GRAY2BGR);
 #endif
       output = cv::Scalar::all(0.f);
 
@@ -469,7 +469,7 @@ namespace emsgc
 #if (CV_VERSION_MAJOR >= 4)
       cv::cvtColor(iwe,output,cv::COLOR_GRAY2BGR);
 #else
-      cv::cvtColor(iwe,output,cv_GRAY2BGR);
+      cv::cvtColor(iwe,output,CV_GRAY2BGR);
 #endif
       //  segMap = segMap - cv::Scalar(0, 0, 0, 127);
       output.convertTo(output, CV_8UC3);

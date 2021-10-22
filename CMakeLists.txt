@@ -4,7 +4,7 @@ project(emsgc)
 find_package(catkin_simple REQUIRED)
 catkin_simple(ALL_DEPS_REQUIRED)
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++17 -O3")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3")
 
 find_package(OpenCV REQUIRED)
 
@@ -17,7 +17,10 @@ pkg_check_modules(gsl REQUIRED gsl)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include gco ${OpenCV_INCLUDE_DIRS} ../delaunator-cpp/include)
+include_directories(include
+    third-party/gco
+    third-party/delaunator/include
+    ${OpenCV_INCLUDE_DIRS})
 
 set(HEADERS
     include/emsgc/core/event_motion_segmentation.h
@@ -29,12 +32,12 @@ set(HEADERS
     include/emsgc/container/PerspectiveCamera.h
     include/emsgc/tools/utils.h
     include/emsgc/tools/TicToc.h
-    gco/energy.h
-    gco/block.h
-    gco/GCoptimization.h
-    gco/graph.h
-    gco/LinkedBlockList.h
-    ../delaunator-cpp/include/delaunator.hpp)
+    third-party/gco/energy.h
+    third-party/gco/block.h
+    third-party/gco/GCoptimization.h
+    third-party/gco/graph.h
+    third-party/gco/LinkedBlockList.h
+    third-party/delaunator/include/delaunator.hpp)
 
 set(SOURCES
     src/container/PerspectiveCamera.cpp
@@ -44,10 +47,10 @@ set(SOURCES
     src/core/numerical_deriv.cpp
     src/core/optimizeLabels.cpp
     src/core/optimizeModels.cpp
-    gco/GCoptimization.cpp
-    gco/graph.cpp
-    gco/LinkedBlockList.cpp
-    gco/maxflow.cpp)
+    third-party/gco/GCoptimization.cpp
+    third-party/gco/graph.cpp
+    third-party/gco/LinkedBlockList.cpp
+    third-party/gco/maxflow.cpp)
 cs_add_library(${PROJECT_NAME}_LIB ${HEADERS} ${SOURCES})
 
 ## Node

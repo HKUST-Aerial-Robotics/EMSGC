@@ -1,0 +1,14 @@
+/bench/
+/cmake/
+/examples/
+/generate-reference-triangles/
+/test/
+/scripts/
+/.clang-format
+/.travis.yml
+/CMakeLists.txt
+/CONTRIBUTING.md
+/LICENSE
+/Makefile
+/README.md
+/THIRD-PARTY-NOTICES

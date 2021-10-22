@@ -17,7 +17,7 @@ Transactions on Neural Network and Learning Systems (T-NNLS) 2021.
 
 # 1. Installation
 We have tested ESVO on machines with the following configurations
-* Ubuntu 18.04.5 LTS + ROS melodic + gcc 5.5.0 + cmake (>=3.10) + OpenCV 3.2
+* Ubuntu 18.04.5 LTS + ROS melodic + gcc 9.4 (enalbes std::filesystem in C++17) + cmake (>=3.10) + OpenCV 3.2
 * ...
 ## 1.1 Driver Installation
 To work with event cameras, especially for the Dynamic Vision Sensors (DVS/DAVIS), you need to install some drivers. 
@@ -82,7 +82,7 @@ Once you have the data ready, go to the launch file and re-edit the paths includ
 - path to where results are saved
 , then run e.g.,
 
-    
+
     $ roslaunch emsgc box_seq00.launch
 
 # 3. Parameters
@@ -117,3 +117,10 @@ Once you have the data ready, go to the launch file and re-edit the paths includ
 # 5. Datasets (TO DELETE)
 Data can be downloaded from the [here](https://drive.google.com/drive/folders/1KB4oUOQcPF9v1u9GEaCMowPkRHyVxodc?usp=sharing).
 
+# 6. FAQs
+- Q1: The results provided in `/result` do not look exactly the same as those shown in the paper.
+
+  A1: This is due to the segmentation is not performed at exactly the same timestamp as that in the paper. 
+      Why? Each dataset has its own way of restoring/parsing the timestamp for evaluation.
+      To make the release as compact as possible, we provide only a unified interface as an example.
+      Also, the color system (HSV) used in the visualization is different from those in the paper.

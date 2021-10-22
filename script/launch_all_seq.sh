@@ -9,10 +9,10 @@
 #roslaunch occlusions.launch
 #roslaunch what_is_background.launch
 
-cd /home/zhouyi/catkin_ws/src/EMSGC/launch/EV-IMO
+#cd /home/zhouyi/catkin_ws/src/EMSGC/launch/EV-IMO
 #roslaunch box_seq00.launch
-roslaunch table_seq01.launch
+#roslaunch table_seq01.launch
 
-cd /home/zhouyi/catkin_ws/src/EMSGC/launch/hkust_EMS
+#cd /home/zhouyi/catkin_ws/src/EMSGC/launch/hkust_EMS
 #roslaunch cast.launch
-roslaunch corridor.launch
+#roslaunch corridor.launch

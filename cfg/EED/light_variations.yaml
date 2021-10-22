@@ -1,15 +1,9 @@
-width: 240
-height: 180
-num_events_per_image: 30000 #15000 # 30000
-contrast_measure: 0
-use_polarity: false
-gaussian_smoothing_sigma: 1.0
-verbosity: 0
+num_events_per_image: 30000
 LAMBDA_data: 1
-LAMBDA_smooth: 30 #25 # 30 #43
-LAMBDA_label: 8000 #15000 #30000 # 25000
-BracketRow: 7 #5
-BracketCol: 7 #5
+LAMBDA_smooth: 30
+LAMBDA_label: 8000
+BracketRow: 7
+BracketCol: 7
 NUM_ITER_SEGMENTATION: 5
 NUM_ITER_LABELING: 2
 HybridModelCombination: 2

@@ -29,6 +29,7 @@ int main(int argc, char** argv)
   std::string option_dir(argv[2]);
   std::string raw_event_dir(argv[3]);
   std::string result_dir(argv[4]);
+  LOG(INFO) << "******************************************************************";
   std::string result_raw_iwe_dir(result_dir + "/raw_IWEs");
   std::filesystem::create_directories(result_raw_iwe_dir);
   std::string result_seg_iwe_dir(result_dir + "/seg_IWEs");

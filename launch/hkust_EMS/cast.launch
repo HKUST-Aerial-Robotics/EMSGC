@@ -2,7 +2,7 @@
    <node name="emsgc_main" pkg="emsgc" type="emsgc_main" output="screen" required="true"
     args="/home/zhouyi/catkin_ws/src/EMSGC/calib/hkust_EMS/cast
           /home/zhouyi/catkin_ws/src/EMSGC/cfg/hkust_EMS/cast.yaml
-          /home/zhouyi/workspace/dataset/DVS/hkust_EMS/flight_field_data/events_filtered.txt
+          /home/zhouyi/workspace/dataset/DVS/EMSGC_DATASET/hkust_EMS/cast/events_filtered.txt
           /home/zhouyi/catkin_ws/src/EMSGC/result/hkust_EMS/cast">
   </node>
 </launch>
