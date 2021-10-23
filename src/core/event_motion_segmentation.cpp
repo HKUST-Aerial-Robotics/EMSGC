@@ -164,17 +164,32 @@ void EventMotionSegmentation::loadAllEventsFromTxt(const std::string & event_txt
   }
 }
 
-void EventMotionSegmentation::loadSpatioTemporalVolume(ros::Time t_ref, ros::Time t_end)
+void EventMotionSegmentation::loadSpatioTemporalVolume(
+  ros::Time t_ref, ros::Time t_end, bool bDenoising)
 {
   stVolume_ = EventQueueMat(img_size_.width, img_size_.height);
   auto it_ev_begin = EventQueue_lower_bound(events_, t_ref);
   auto it_ev_end = EventQueue_lower_bound(events_, t_end);
   numSites_ = 0;
   numEdges_ = 0;
-  while(it_ev_begin != it_ev_end)
+  if(bDenoising)
   {
-    stVolume_.insertEvent(*it_ev_begin);
-    it_ev_begin++;
+    cv::Mat mask;
+    std::vector<dvs_msgs::Event> vEdgeEvents;
+    tools::createDenoisingMask(it_ev_begin, it_ev_end, mask, img_size_.height, img_size_.width, false);
+    cv::medianBlur(mask, mask, 1);
+    tools::extractDenoisedEvents(it_ev_begin, it_ev_end, vEdgeEvents, mask);
+    LOG(INFO) << "Event denoising Finshed... " << vEdgeEvents.size() << " events are preserved.";
+    for(size_t i = 0; i < vEdgeEvents.size(); i++)
+      stVolume_.insertEvent(vEdgeEvents[i]);
+  }
+  else
+  {
+    while(it_ev_begin != it_ev_end)
+    {
+      stVolume_.insertEvent(*it_ev_begin);
+      it_ev_begin++;
+    }
   }
   stVolume_.computeGlobalHeadID();
 }

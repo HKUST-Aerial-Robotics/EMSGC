@@ -1,10 +1,4 @@
-width: 346
-height: 260
 num_events_per_image: 15000
-contrast_measure: 0
-use_polarity: false
-gaussian_smoothing_sigma: 1.0
-verbosity: 0
 LAMBDA_data: 1
 LAMBDA_smooth: 30
 LAMBDA_label: 8000
@@ -27,4 +21,4 @@ advanceNum: 0
 
 timestamp_begin: 0.1
 timestamp_end:   0.4
-timestamp_step: 0.03 #0.005
+timestamp_step: 0.02

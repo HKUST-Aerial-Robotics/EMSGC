@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     ros::Time t_end(ems.getTemporalBound(t_ref.toSec()));
     LOG(INFO) << "The involved events occur within [" << t_ref.toNSec() << "," << t_end.toNSec() << "] nano sec.";
 
-    ems.loadSpatioTemporalVolume(t_ref, t_end);
+    ems.loadSpatioTemporalVolume(t_ref, t_end, true);
     LOG(INFO) << "Loaded Spatio-Temporal Volume.";
 
     /* Algorithm Summary:

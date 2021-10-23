@@ -46,7 +46,7 @@ public:
   void loadCalibInfo(const std::string &calibInfoPath, bool bPrintCalibInfo = false);
   void loadBaseOptions(const std::string & option_path);
   void loadAllEventsFromTxt(const std::string & event_txt_path);
-  void loadSpatioTemporalVolume(ros::Time t_ref, ros::Time t_end);
+  void loadSpatioTemporalVolume(ros::Time t_ref, ros::Time t_end, bool bDenoising = false);
 
   /* Segmentation */
   void applySegmentation_GMM(ros::Time& t_ref, ros::Time& t_end);
