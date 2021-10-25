@@ -38,9 +38,15 @@ struct MotionModel
 
 enum MotionModelType
 {
-  TranslationModel, // 2 DoF
-  RotationModel, // 3 DoF
-  AffineModel// 4 DoF
+  TranslationModel, // 0 DoF
+  RotationModel, // 1 DoF
+  AffineModel// 2 DoF
+};
+
+enum ColorSpace
+{
+  RGB_rendering, // 0 RGB
+  HSV_rendering // 1 HSV
 };
 
 inline string MotionModeType_to_String(MotionModelType type)
@@ -135,6 +141,9 @@ struct OptionsMethod
 
   // Options of the image of warped events
   OptionsWarp opts_warp_;
+
+  // Color space for IWE rendering
+  ColorSpace color_rendering_ = HSV_rendering;
 };
 
 inline double bilinearIntepolation(

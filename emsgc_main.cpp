@@ -161,9 +161,12 @@ int main(int argc, char** argv)
       cv::imshow("IWE without Compensation", raw_iwe);
 
     // display labeled IWE (compensated accordingly)
-    //drawColorIWE_with_EventClustersGMM(
-    drawColorIWE_with_EventClustersGMM_HSV(
-      ems.mEvtClustersGMM_, t_ref, ems.opts_.opts_warp_, ems.img_size_.width, ems.img_size_.height, labeled_iwe);
+    if(ems.opts_.color_rendering_ == HSV_rendering)
+      drawColorIWE_with_EventClustersGMM_HSV(
+        ems.mEvtClustersGMM_, t_ref, ems.opts_.opts_warp_, ems.img_size_.width, ems.img_size_.height, labeled_iwe);
+    else // RGB
+      drawColorIWE_with_EventClustersGMM(
+        ems.mEvtClustersGMM_, t_ref, ems.opts_.opts_warp_, ems.img_size_.width, ems.img_size_.height, labeled_iwe);
     if(ems.bSaveResult_)
       cv::imwrite(result_seg_iwe_dir + "/" + iwe_name, labeled_iwe);
     if(ems.bDisplayResult_)
