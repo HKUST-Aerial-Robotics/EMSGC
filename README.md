@@ -16,7 +16,7 @@ Transactions on Neural Network and Learning Systems (T-NNLS) 2021.
 
 
 # 1. Installation
-We have tested ESVO on machines with the following configurations
+We have tested our code on machines with the following configurations
 * Ubuntu 18.04.5 LTS + ROS melodic + gcc 9.4 (enalbes std::filesystem in C++17) + cmake (>=3.10) + OpenCV 3.2
 * ...
 ## 1.1 Driver Installation
@@ -60,7 +60,7 @@ Other ROS dependencies should have been installed in Section 1.1.
 If not by accident, install the missing ones accordingly.
 Besides, you also need to have `OpenCV` (3.2 or later) and `Eigen 3` installed.
 
-## 1.3 ESVO Installation
+## 1.3 Installation
 After cloning this repository, as stated above (reminder)
 
 	$ cd ~/catkin_ws/src 
@@ -73,7 +73,7 @@ run
 
 # 2. Usage
 
-First you need to download rosbag files from the [EMSGC Project Page](https://sites.google.com/view/emsgc-project-page/home).
+First you need to download rosbag files from the [EMSGC Project Page](https://sites.google.com/view/emsgc).
 
 Once you have the data ready, go to the launch file and re-edit the paths including
 - path to calibration_file
@@ -87,12 +87,9 @@ Once you have the data ready, go to the launch file and re-edit the paths includ
 
 # 3. Parameters
 
-- width, height: Image size
 - num_events_per_image: The number of events involved in the ST volume
 - contrast_measure: Dispersion metrics for IWE's constrast. 0 -> VARIANCE_CONTRAST, 1 -> MEAN_SQUARE_CONTRAST
-- use_polarity: Set "False" to ignore polarity (Only False is supported in this release)
 - gaussian_smoothing_sigma: Sigma of the Gaussian for replacing the Dirac function (see Eq.(3) and (4) in the paper)
-- verbosity: Set "1" for detailed output
 - timestamp_begin: Starting timestamp
 - timestamp_end: Ending timestamp
 - timestamp_step: Temporal step (determines the timestamp at which the motion segmentation is performed.)
@@ -114,8 +111,12 @@ Once you have the data ready, go to the launch file and re-edit the paths includ
 - Affine_theta_max: Maximum theta
 - division_exponent: Times of binary search.
 
+You may set the verbosity / printing level in the command line, directly, by running
+
+    env GLOG_v=1 roslaunch emsgc car.launch
+
 # 5. Datasets (TO DELETE)
-Data can be downloaded from the [here](https://drive.google.com/drive/folders/1KB4oUOQcPF9v1u9GEaCMowPkRHyVxodc?usp=sharing).
+Data can be downloaded from the [Project page](https://sites.google.com/view/emsgc).
 
 # 6. FAQs
 - Q1: The results provided in `/result` do not look exactly the same as those shown in the paper.
