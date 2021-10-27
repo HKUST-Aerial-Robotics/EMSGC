@@ -15,10 +15,6 @@ repositories:
     type: git
     url: https://github.com/ethz-asl/glog_catkin.git
     version: master
-  minkindr:
-    type: git
-    url: https://github.com/ethz-asl/minkindr.git
-    version: master
   eigen_catkin:
     type: git
     url: https://github.com/ethz-asl/eigen_catkin.git
@@ -27,8 +23,3 @@ repositories:
     type: git
     url: https://github.com/ethz-asl/eigen_checks.git
     version: master
-  minkindr_ros:
-    type: git
-    url: https://github.com/ethz-asl/minkindr_ros.git
-    version: master
-
