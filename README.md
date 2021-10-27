@@ -111,11 +111,11 @@ Once you have the data ready, go to the launch file and re-edit the paths includ
 - Affine_theta_max: Maximum theta
 - division_exponent: Times of binary search.
 
-You may set the verbosity / printing level in the command line, directly, by running
+You may set the verbosity / printing level in the command line directly, by settign the value of variable `GLOG_v` (>= 0). Example:
 
     env GLOG_v=1 roslaunch emsgc car.launch
 
-# 5. Datasets (TO DELETE)
+# 5. Data
 Data can be downloaded from the [Project page](https://sites.google.com/view/emsgc).
 
 # 6. FAQs
