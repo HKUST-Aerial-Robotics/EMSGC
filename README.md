@@ -1,60 +1,71 @@
-# EMSGC
-This repository maintains the implementation of the paper "Event-based Motion Segmentation withSpatio-Temporal Graph Cuts".
+# EMSGC: Event-based Motion Segmentation with Spatio-Temporal Graph Cuts
 
-**Videos**
+[![VIDEO EMSGC](https://youtu.be/Ev7lQOhqiUk/1.jpg)](https://youtu.be/Ev7lQOhqiUk)
 
-[![IMAGE ALT TEXT HERE](https://youtu.be/Ev7lQOhqiUk/1.jpg)](https://youtu.be/Ev7lQOhqiUk)
+## Publication
 
-### Related Publications
+This is the code for the IEEE TNNLS paper:
 
 * **[Event-based Motion Segmentation with Spatio-Temporal Graph Cuts](https://arxiv.org/pdf/2012.08730.pdf)**, 
-*Yi Zhou, Guillermo Gallego, Xiuyuan Lu, Siqi Liu and Shaojie Shen*, submitted to IEEE 
-Transactions on Neural Network and Learning Systems (T-NNLS) 2021.
+*Yi Zhou, Guillermo Gallego, Xiuyuan Lu, Siqi Liu and Shaojie Shen*, 
+IEEE Transactions on Neural Network and Learning Systems (TNNLS) 2021.
 
 * **[Event-based Motion Segmentation by Cascaded Two-Level Multi-Model Fitting]()**, 
-*Event-based  Motion  Segmentation  by  CascadedTwo-Level  Multi-Model  Fitting*, IROS 2021.
+*Event-based Motion Segmentation by Cascaded Two-Level Multi-Model Fitting*, IROS 2021.
 
+If you use any of this code, please cite the following publication:
+
+```bibtex
+@Article{Zhou21tnnls,
+  title   = {Event-based Motion Segmentation with Spatio-Temporal Graph Cuts},
+  author  = {Zhou, Yi and Gallego, Guillermo and Lu, Xiuyuan and Liu, Siqi and Shen, Shaojie},
+  journal = {IEEE Transactions on Neural Network and Learning Systems},
+  year    = {2021}
+}
+```
 
 # 1. Installation
 We have tested our code on machines with the following configurations
 * Ubuntu 18.04.5 LTS + ROS melodic + gcc 9.4 (enalbes std::filesystem in C++17) + cmake (>=3.10) + OpenCV 3.2
 * ...
+
 ## 1.1 Driver Installation
-To work with event cameras, especially for the Dynamic Vision Sensors (DVS/DAVIS), you need to install some drivers. 
-Please follow the instructions (steps 1-9) at [rpg_dvs_ros](https://github.com/uzh-rpg/rpg_dvs_ros) before moving on to the next step. Note that you need to replace the name of the ROS distribution with the one installed on your computer.
+To work with event cameras, in particular the Dynamic Vision Sensors (DVS/DAVIS), you need to install some drivers. 
+Please follow the instructions (steps 1-9) at [rpg_dvs_ros](https://github.com/uzh-rpg/rpg_dvs_ros) before moving on to the next step. 
+Note that you need to replace the name of the ROS distribution with the one installed on your computer.
 We use catkin tools to build the code. You should have it installed during the driver installation.
 
 ## 1.2 Dependencies Installation
 
 You should have created a catkin workspace in Section 1.1. If not, please go back and create one.
 
-**Clone this repository** into the `src` folder of your catkin workspace.
+**Clone this repository** into the `src` folder of your catkin workspace. In a terminal, run:
 
-	$ cd ~/catkin_ws/src 
-	$ git clone https://github.com/HKUST-Aerial-Robotics/EMSGC.git
+    cd ~/catkin_ws/src 
+    git clone https://github.com/HKUST-Aerial-Robotics/EMSGC.git
 
 Dependencies are specified in the file [dependencies.yaml](dependencies.yaml). They can be installed with the following commands from the `src` folder of your catkin workspace:
 
-	$ cd ~/catkin_ws/src
-	$ sudo apt-get install python3-vcstool
-	$ vcs-import < EMSGC/dependencies.yaml
+    cd ~/catkin_ws/src
+    sudo apt-get install python3-vcstool
+    vcs-import < EMSGC/dependencies.yaml
 
 The previous command should clone the repositories into folders called *catkin_simple*, *glog_catkin*, *gflags_catkin*, *minkindr*, etc. inside the `src` folder of your catking workspace, at the same level as this repository (EMSGC).
 
 You may need `autoreconf` to compile glog_catkin. To install `autoreconf`, run
 
-	$ sudo apt-get install autoconf
+    sudo apt-get install autoconf
 
 Note that above command may change on different version of Ubuntu.
 Please refer to https://askubuntu.com/a/269423 for details.
 
 **yaml-cpp** is only used for loading calibration parameters from yaml files:
 
-	$ cd ~/catkin_ws/src 
-	$ git clone https://github.com/jbeder/yaml-cpp.git
-	$ cd yaml-cpp
-	$ mkdir build && cd build && cmake -DYAML_BUILD_SHARED_LIBS=ON ..
-	$ make -j
+    cd ~/catkin_ws/src 
+    git clone https://github.com/jbeder/yaml-cpp.git
+    cd yaml-cpp
+    mkdir build && cd build && cmake -DYAML_BUILD_SHARED_LIBS=ON ..
+    make -j
 
 Other ROS dependencies should have been installed in Section 1.1.
 If not by accident, install the missing ones accordingly.
@@ -63,25 +74,25 @@ Besides, you also need to have `OpenCV` (3.2 or later) and `Eigen 3` installed.
 ## 1.3 Installation
 After cloning this repository, as stated above (reminder)
 
-	$ cd ~/catkin_ws/src 
-	$ git clone https://github.com/HKUST-Aerial-Robotics/EMSGC.git
+    cd ~/catkin_ws/src 
+    git clone https://github.com/HKUST-Aerial-Robotics/EMSGC.git
 
 run
 
-	$ catkin build emsgc
-	$ source ~/catkin_ws/devel/setup.bash
+    catkin build emsgc
+    source ~/catkin_ws/devel/setup.bash
 
 # 2. Usage
 
 First you need to download rosbag files from the [EMSGC Project Page](https://sites.google.com/view/emsgc).
 
-Once you have the data ready, go to the launch file and re-edit the paths including
-- path to calibration_file
-- path to config_file
-- path to event_data
-- path to where results are saved
-, then run e.g.,
+Once you have the data ready, go to the launch file and adapt the paths to your setup, including:
+  - path to calibration_file
+  - path to config_file
+  - path to event_data
+  - path to where results are saved
 
+Then run e.g.,
 
     $ roslaunch emsgc box_seq00.launch
 
@@ -113,7 +124,7 @@ Once you have the data ready, go to the launch file and re-edit the paths includ
 
 You may set the verbosity / printing level in the command line directly, by settign the value of variable `GLOG_v` (>= 0). Example:
 
-    env GLOG_v=1 roslaunch emsgc car.launch
+    env GLOG_v=2 roslaunch emsgc box_seq00.launch
 
 # 5. Data
 Data can be downloaded from the [Project page](https://sites.google.com/view/emsgc).
