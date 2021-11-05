@@ -1,9 +1,10 @@
 # EMSGC: Event-based Motion Segmentation with Spatio-Temporal Graph Cuts
 
-EMSGC provides a solution to identify independently moving objects acquired with an event-based camera, i.e., to solve the event-based motion segmentation problem. The problem is cast as an energy minimization one involving the fitting of multiple motion models. EMSGC jointly solves two subproblems, namely eventcluster assignment (labeling) and motion model fitting, in an iterative manner by exploiting the structure of the input event data in the form of a spatio-temporal graph.
+**EMSGC** provides a solution to identify independently moving objects acquired with an event-based camera, i.e., to solve the event-based motion segmentation problem. The problem is cast as an energy minimization one involving the fitting of multiple motion models. EMSGC jointly solves two subproblems, namely eventcluster assignment (labeling) and motion model fitting, in an iterative manner by exploiting the structure of the input event data in the form of a spatio-temporal graph.
 
 Please refer to the **[EMSGC Project Page](https://sites.google.com/view/emsgc)** for more detailed information and for testing event data.
 
+**Videos**
 [![VIDEO EMSGC](https://img.youtube.com/vi/ztUyNlKUwcM/2.jpg)](https://youtu.be/ztUyNlKUwcM)
 
 ## Publication
