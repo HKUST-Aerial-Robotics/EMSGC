@@ -58,7 +58,7 @@ Dependencies are specified in the file [dependencies.yaml](dependencies.yaml). T
     sudo apt-get install python3-vcstool
     vcs-import < EMSGC/dependencies.yaml
 
-The previous command should clone the repositories into folders called *catkin_simple*, *glog_catkin*, *gflags_catkin*, *minkindr*, etc. inside the `src` folder of your catking workspace, at the same level as this repository (EMSGC).
+The previous command should clone the repositories into folders called *catkin_simple*, *glog_catkin*, *gflags_catkin*, *minkindr*, etc. inside the `src` folder of your catkin workspace, at the same level as this repository (EMSGC).
 
 You may need `autoreconf` to compile glog_catkin. To install `autoreconf`, run
 
@@ -106,29 +106,28 @@ Then run e.g.,
 
 # 3. Parameters
 
-- num_events_per_image: The number of events involved in the ST volume
-- contrast_measure: Dispersion metrics for IWE's constrast. 0 -> VARIANCE_CONTRAST, 1 -> MEAN_SQUARE_CONTRAST
-- gaussian_smoothing_sigma: Sigma of the Gaussian for replacing the Dirac function (see Eq.(3) and (4) in the paper)
-- timestamp_begin: Starting timestamp
-- timestamp_end: Ending timestamp
-- timestamp_step: Temporal step (determines the timestamp at which the motion segmentation is performed.)
+- num_events_per_image: The number of events involved in the Space-Time volume.
+- timestamp_begin: Starting timestamp.
+- timestamp_end: Ending timestamp.
+- timestamp_step: Determines the timestamp at which the motion segmentation is performed.
 - DisplayResult: Set "True" for saving results to local files.
-- SaveResult: Set "True" for displaying result with OpenCV API
+- SaveResult: Set "True" for displaying result with OpenCV API.
+- advanceNum: Number of estimation skipped.
 
 ### MRF Parameters
-- LAMBDA_data: Coefficient of data term
-- LAMBDA_smooth: Coefficient of Potts model
-- LAMBDA_label: Coefficient of MDL term
-- NUM_ITER_SEGMENTATION: Number of interation for continuous update
-- NUM_ITER_LABELING: Number of interation for discrete update (alpha-expension graph cut)
+- LAMBDA_data: Coefficient of data term.
+- LAMBDA_smooth: Coefficient of Potts model.
+- LAMBDA_label: Coefficient of MDL term.
+- NUM_ITER_SEGMENTATION: Number of interation for continuous update.
+- NUM_ITER_LABELING: Number of interation for discrete update (alpha-expension graph cut).
 
 ### Initialization
 - HybridModelCombination: 0->Only2D, 1->Only3D, 2->Only4D, 3->Both2Dand3D, 4->Both2Dand4D, 5->Both3Dand4D, 6->All2D3D4D
-- BracketRow, BracketCol: Number of divisions in each dimension.
-- Affine_trans2d_max: Maximum translation
-- Affine_scale_max: Maximum scale
-- Affine_theta_max: Maximum theta
-- division_exponent: Times of binary search.
+- BracketRow, BracketCol: Space-Time Volume division (initialization) parameters.
+- Affine_trans2d_max: Maximum translation.
+- Affine_scale_max: Maximum scale.
+- Affine_theta_max: Maximum theta.
+- division_exponent: Binary search parameter.
 
 You may set the verbosity / printing level in the command line directly, by settign the value of variable `GLOG_v` (>= 0). Example:
 
@@ -140,4 +139,4 @@ Data can be downloaded from the [Project page](https://sites.google.com/view/ems
 # 6. FAQs
 - Q1: The results provided in `/result` do not look exactly the same as those shown in the paper.
 
-  A1: This is due to the segmentation is not performed at exactly the same timestamp as that in the paper. Why? Each dataset has its own way of restoring/parsing the timestamp for evaluation. To make the release as compact as possible, we provide only a unified interface as an example. Besides, the color system (HSV) is enabled by default in the implementation. You may switch to RGBC_rendering to get the same color system as that in the paper.
+  A1: This is due to that the segmentation is not performed at exactly the same timestamp as in the paper. Why? Each dataset has its own way of restoring/parsing the timestamp for evaluation. To make the release as compact as possible, we provide only a unified interface as an example. Besides, the color system (HSV) is enabled by default in the implementation. You may switch to RGBC_rendering to get the same color system as in the paper.
