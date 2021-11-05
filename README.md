@@ -148,6 +148,6 @@ For commercial use, please contact Yi Zhou and Shaojie Shen.
 Email: eeyzhou@hnu.edu.cn; eeshaojie@ust.hk.
 
 # 8. Additional Resources on Event Cameras
-[ESVO](https://sites.google.com/view/emsgc)
+[Event-based Stereo Visual Odometry](https://sites.google.com/view/esvo-project-page/home)
 
 [Event-based Vision Survey Paper](http://rpg.ifi.uzh.ch/docs/EventVisionSurvey.pdf)
