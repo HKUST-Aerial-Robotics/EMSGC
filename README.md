@@ -140,3 +140,13 @@ Data can be downloaded from the [Project page](https://sites.google.com/view/ems
 - Q1: The results provided in `/result` do not look exactly the same as those shown in the paper.
 
   A1: This is due to that the segmentation is not performed at exactly the same timestamp as in the paper. Why? Each dataset has its own way of restoring/parsing the timestamp for evaluation. To make the release as compact as possible, we provide only a unified interface as an example. Besides, the color system (HSV) is enabled by default in the implementation. You may switch to RGBC_rendering to get the same color system as in the paper.
+
+# 7. License
+EMSGC is licensed under the GNU General Public License Version 3 (GPLv3), see http://www.gnu.org/licenses/gpl.html.
+
+For commercial use, please contact Yi Zhou and Shaojie Shen. 
+Email: eeyzhou@hnu.edu.cn; eeshaojie@ust.hk.
+
+# 8. Additional Resources on Event Cameras
+[ESVO](https://sites.google.com/view/emsgc)
+[Event-based Vision Survey Paper](http://rpg.ifi.uzh.ch/docs/EventVisionSurvey.pdf)
