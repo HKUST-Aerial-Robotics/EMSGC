@@ -2,6 +2,8 @@
 
 [![VIDEO EMSGC](https://youtu.be/Ev7lQOhqiUk/1.jpg)](https://youtu.be/Ev7lQOhqiUk)
 
+The implementation of event warping and contrast maximization is based on **[dvs_global_flow](https://github.com/tub-rip/dvs_global_flow_skeleton)**.
+
 ## Publication
 
 This is the code for the IEEE TNNLS paper:
@@ -132,7 +134,4 @@ Data can be downloaded from the [Project page](https://sites.google.com/view/ems
 # 6. FAQs
 - Q1: The results provided in `/result` do not look exactly the same as those shown in the paper.
 
-  A1: This is due to the segmentation is not performed at exactly the same timestamp as that in the paper. 
-      Why? Each dataset has its own way of restoring/parsing the timestamp for evaluation.
-      To make the release as compact as possible, we provide only a unified interface as an example.
-      Also, the color system (HSV) used in the visualization is different from those in the paper.
+  A1: This is due to the segmentation is not performed at exactly the same timestamp as that in the paper. Why? Each dataset has its own way of restoring/parsing the timestamp for evaluation. To make the release as compact as possible, we provide only a unified interface as an example. Besides, the color system (HSV) is enabled by default in the implementation. You may switch to RGBC_rendering to get the same color system as that in the paper.
