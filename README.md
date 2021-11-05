@@ -1,8 +1,10 @@
 # EMSGC: Event-based Motion Segmentation with Spatio-Temporal Graph Cuts
 
-[![VIDEO EMSGC](https://youtu.be/Ev7lQOhqiUk/1.jpg)](https://youtu.be/Ev7lQOhqiUk)
+EMSGC provides a solution to identify independently moving objects acquired with an event-based camera, i.e., to solve the event-based motion segmentation problem. The problem is cast as an energy minimization one involving the fitting of multiple motion models. EMSGC jointly solves two subproblems, namely eventcluster assignment (labeling) and motion model fitting, in an iterative manner by exploiting the structure of the input event data in the form of a spatio-temporal graph.
 
-The implementation of event warping and contrast maximization is based on **[dvs_global_flow](https://github.com/tub-rip/dvs_global_flow_skeleton)**.
+Please refer to the **[EMSGC Project Page](https://sites.google.com/view/emsgc)** for more detailed information and for testing event data.
+
+[![VIDEO EMSGC](https://youtu.be/ztUyNlKUwcM/1.jpg)](https://youtu.be/ztUyNlKUwcM)
 
 ## Publication
 
@@ -25,6 +27,8 @@ If you use any of this code, please cite the following publication:
   year    = {2021}
 }
 ```
+
+Also note that the implementation of event warping and contrast maximization is based on **[dvs_global_flow](https://github.com/tub-rip/dvs_global_flow_skeleton)**. Please cite the corresponding publications if you use them.
 
 # 1. Installation
 We have tested our code on machines with the following configurations
