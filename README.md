@@ -4,7 +4,7 @@ EMSGC provides a solution to identify independently moving objects acquired with
 
 Please refer to the **[EMSGC Project Page](https://sites.google.com/view/emsgc)** for more detailed information and for testing event data.
 
-[![IMAGE ALT TEXT HERE](https://youtu.be/ztUyNlKUwcM/1.jpg)](https://youtu.be/ztUyNlKUwcM)
+[![VIDEO EMSGC](https://img.youtube.com/vi/ztUyNlKUwcM/2.jpg)](https://youtu.be/ztUyNlKUwcM)
 
 ## Publication
 
