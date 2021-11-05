@@ -5,6 +5,7 @@
 Please refer to the **[EMSGC Project Page](https://sites.google.com/view/emsgc)** for more detailed information and for testing event data.
 
 **Videos**
+
 [![VIDEO EMSGC](https://img.youtube.com/vi/ztUyNlKUwcM/2.jpg)](https://youtu.be/ztUyNlKUwcM)
 
 ## Publication
