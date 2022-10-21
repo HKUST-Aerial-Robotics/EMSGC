@@ -199,6 +199,8 @@ void EventMotionSegmentation::findBestGmmInRangeBruteForce_4D_FromeUndistortedEv
             minimum_cost = cost;
             opt_mx = mx;
             opt_my = my;
+            opt_scale = m_scale;
+            opt_theta = m_theta;
           }
         }
       }
