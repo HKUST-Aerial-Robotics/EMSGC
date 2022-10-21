@@ -79,6 +79,10 @@ Other ROS dependencies should have been installed in Section 1.1.
 If not by accident, install the missing ones accordingly.
 Besides, you also need to have `OpenCV` (3.2 or later) and `Eigen 3` installed.
 
+Furthermore, the [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/) needs to be installed. If missing, you can install it with
+
+    sudo apt-get install libgsl-dev
+
 ## 1.3 Installation
 After cloning this repository, as stated above (reminder)
 
