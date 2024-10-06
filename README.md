@@ -4,9 +4,9 @@
 
 Please refer to the **[EMSGC Project Page](https://sites.google.com/view/emsgc)** for more detailed information and for testing event data.
 
-**Videos**
+## Video
 
-[![VIDEO EMSGC](https://img.youtube.com/vi/ztUyNlKUwcM/2.jpg)](https://youtu.be/ztUyNlKUwcM)
+[![VIDEO EMSGC](docs/img/2021_TNNLS_EMSGC_thumb.jpg)](https://youtu.be/ztUyNlKUwcM)
 
 ## Publication
 
@@ -14,7 +14,7 @@ This is the code for the IEEE TNNLS paper:
 
 * **[Event-based Motion Segmentation with Spatio-Temporal Graph Cuts](https://arxiv.org/pdf/2012.08730.pdf)**, 
 *Yi Zhou, Guillermo Gallego, Xiuyuan Lu, Siqi Liu and Shaojie Shen*, 
-IEEE Transactions on Neural Network and Learning Systems (TNNLS) 2021.
+IEEE Transactions on Neural Networks and Learning Systems (TNNLS), 34(8):4868-4880, 2021.
 
 * **[Event-based Motion Segmentation by Cascaded Two-Level Multi-Model Fitting]()**, 
 *Event-based Motion Segmentation by Cascaded Two-Level Multi-Model Fitting*, IROS 2021.
@@ -25,8 +25,12 @@ If you use any of this code, please cite the following publication:
 @Article{Zhou21tnnls,
   title   = {Event-based Motion Segmentation with Spatio-Temporal Graph Cuts},
   author  = {Zhou, Yi and Gallego, Guillermo and Lu, Xiuyuan and Liu, Siqi and Shen, Shaojie},
-  journal = {IEEE Transactions on Neural Network and Learning Systems},
-  year    = {2021}
+  journal = {{IEEE} Transactions on Neural Networks and Learning Systems},
+  year    = {2023}
+  volume  = {34},
+  number  = {8},
+  pages   = {4868--4880},
+  doi     = {10.1109/TNNLS.2021.3124580}  
 }
 ```
 
