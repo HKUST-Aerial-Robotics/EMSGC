@@ -25,8 +25,12 @@ If you use any of this code, please cite the following publication:
 @Article{Zhou21tnnls,
   title   = {Event-based Motion Segmentation with Spatio-Temporal Graph Cuts},
   author  = {Zhou, Yi and Gallego, Guillermo and Lu, Xiuyuan and Liu, Siqi and Shen, Shaojie},
-  journal = {IEEE Transactions on Neural Network and Learning Systems},
-  year    = {2021}
+  journal = {{IEEE} Transactions on Neural Networks and Learning Systems},
+  year    = {2023}
+  volume  = {34},
+  number  = {8},
+  pages   = {4868--4880},
+  doi     = {10.1109/TNNLS.2021.3124580}  
 }
 ```
 
