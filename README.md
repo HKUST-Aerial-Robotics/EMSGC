@@ -16,7 +16,7 @@ This is the code for the IEEE TNNLS paper:
 *Yi Zhou, Guillermo Gallego, Xiuyuan Lu, Siqi Liu and Shaojie Shen*, 
 IEEE Transactions on Neural Networks and Learning Systems (TNNLS), 34(8):4868-4880, 2021.
 
-* **[Event-based Motion Segmentation by Cascaded Two-Level Multi-Model Fitting]()**, 
+* **[Event-based Motion Segmentation by Cascaded Two-Level Multi-Model Fitting](https://arxiv.org/pdf/2111.03483)**, 
 *Event-based Motion Segmentation by Cascaded Two-Level Multi-Model Fitting*, IROS 2021.
 
 If you use any of this code, please cite the following publication:
@@ -32,6 +32,17 @@ If you use any of this code, please cite the following publication:
   pages   = {4868--4880},
   doi     = {10.1109/TNNLS.2021.3124580}  
 }
+
+@INPROCEEDINGS{9636307,
+  author={Lu, Xiuyuan and Zhou, Yi and Shen, Shaojie},
+  booktitle={2021 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}, 
+  title={Event-based Motion Segmentation by Cascaded Two-Level Multi-Model Fitting}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={4445-4452},
+  keywords={Computer vision;Visualization;Tracking;Motion segmentation;Fitting;Dynamics;Cameras},
+  doi={10.1109/IROS51168.2021.9636307}}
 ```
 
 Also note that the implementation of event warping and contrast maximization is based on **[dvs_global_flow](https://github.com/tub-rip/dvs_global_flow_skeleton)**. Please cite the corresponding publications if you use them.
